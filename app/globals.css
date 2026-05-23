@@ -271,3 +271,154 @@ html, body {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
+
+/* ── 멀티 이미지 에디터 ─── */
+.multi-image-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.multi-image-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.btn-add-image {
+  padding: 6px 12px;
+  background: #FF6B9D;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-add-image:hover:not(:disabled) {
+  background: #FF4D87;
+}
+
+.btn-add-image:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.empty-images {
+  padding: 32px;
+  text-align: center;
+  color: #999;
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.empty-images:hover {
+  border-color: #FF6B9D;
+  background: #fff5f9;
+  color: #FF6B9D;
+}
+
+/* ── 이미지 카드 ─── */
+.image-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.15s;
+}
+
+.image-card.expanded {
+  border-color: #FF6B9D;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+}
+
+.image-card-header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+}
+
+.image-card-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.image-card-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: #f3f4f6;
+}
+
+.image-card-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.image-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.image-card-desc {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.image-card-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 4px;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-icon:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.btn-icon.btn-remove:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.image-card-body {
+  padding: 12px;
+  border-top: 1px solid #f3f4f6;
+  background: #fafafa;
+}

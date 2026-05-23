@@ -1,34 +1,32 @@
-import type { AnimationType } from '@/lib/tokens';
+import type { ImageItem } from '@/lib/state/useCarouselDraft';
 
-export function AnimatedImage({
-  src,
-  x,
-  y,
-  size,
-  animation,
-  duration,
-}: {
-  src: string;
-  x: number;
-  y: number;
-  size: number;
-  animation: AnimationType;
-  duration: number;
-}) {
+export function AnimatedImage({ image }: { image: ImageItem }) {
   return (
     <img
-      src={src}
+      src={image.src}
       alt=""
       style={{
         position: 'absolute',
-        left: x,
-        top: y,
-        width: size,
-        height: size,
+        left: image.x,
+        top: image.y,
+        width: image.size,
+        height: image.size,
         objectFit: 'contain',
         transform: 'translate(-50%, -50%)',
-        animation: animation !== 'none' ? `${animation} ${duration}s ease-in-out infinite` : undefined,
+        animation: image.animation !== 'none' 
+          ? `${image.animation} ${image.duration}s ease-in-out infinite` 
+          : undefined,
       }}
     />
+  );
+}
+
+export function MultiImages({ images }: { images: ImageItem[] }) {
+  return (
+    <>
+      {images.map((img) => (
+        <AnimatedImage key={img.id} image={img} />
+      ))}
+    </>
   );
 }
