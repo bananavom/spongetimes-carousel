@@ -4,6 +4,7 @@ import { createRef, RefObject, useRef, useState } from 'react';
 import { useCarouselDraft, CarouselDraft, ImageSlideKey } from '@/lib/state/useCarouselDraft';
 import { SLIDE_LABELS } from '@/lib/tokens';
 import { downloadSlide, downloadAllAsZip } from '@/lib/utils/exportImage';
+import { recordSlideToVideo } from '@/lib/utils/exportVideo';
 
 import { TextField, TextareaField, NumberField } from './editor/Fields';
 import { MultiImageEditor } from './editor/MultiImageEditor';
@@ -51,6 +52,21 @@ export function CarouselStudio() {
     setExporting(true);
     try {
       await downloadSlide(node, getSlideNames()[activeTab]);
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  async function handleDownloadVideo() {
+    const node = slideRefs.current[activeTab]?.current;
+    if (!node) return;
+    setExporting(true);
+    try {
+      const filename = getSlideNames()[activeTab].replace('.png', '.mp4');
+      await recordSlideToVideo(node, filename, 7000); // 7초
+    } catch (err) {
+      console.error(err);
+      alert('영상 생성 실패: ' + (err instanceof Error ? err.message : '알 수 없는 에러'));
     } finally {
       setExporting(false);
     }
@@ -174,10 +190,13 @@ export function CarouselStudio() {
           <h1>🍍 데굴데굴 캐러셀</h1>
           <div className="topbar-actions">
             <button className="btn-secondary" onClick={handleDownloadCurrent} disabled={exporting}>
-              {exporting ? '처리 중...' : '현재 PNG'}
+              {exporting ? '...' : '📷 PNG'}
+            </button>
+            <button className="btn-video" onClick={handleDownloadVideo} disabled={exporting}>
+              {exporting ? '...' : '🎬 MP4'}
             </button>
             <button className="btn-primary" onClick={handleDownloadAll} disabled={exporting}>
-              {exporting ? '처리 중...' : '전체 ZIP'}
+              {exporting ? '...' : '📦 ZIP'}
             </button>
           </div>
         </div>
