@@ -6,7 +6,7 @@ export function OutroSlide({ draft }: { draft: CarouselDraft }) {
   return (
     <div style={{ width: 1080, height: 1350, background: COLORS.coverBg, position: 'relative', overflow: 'hidden', fontFamily: "'Pretendard', 'Noto Sans KR', sans-serif" }}>
       <div style={{ position: 'absolute', top: 60, left: 60, fontSize: 28, fontWeight: 600, color: COLORS.textSub }}>
-        🍍 Week {String(draft.week).padStart(2, '0')} · 마무리
+        🍍 Week {String(draft.week).padStart(2, '0')} · {draft.outro_name}
       </div>
       <div style={{ position: 'absolute', top: 200, left: 60, right: 60, fontSize: 72, fontWeight: 800, color: COLORS.text, textAlign: 'center', letterSpacing: '-0.03em' }}>
         {draft.outro_mainText}

@@ -6,7 +6,7 @@ export function WebsiteSlide({ draft }: { draft: CarouselDraft }) {
   return (
     <div style={{ width: 1080, height: 1350, background: COLORS.bodyBg, position: 'relative', overflow: 'hidden', fontFamily: "'Pretendard', 'Noto Sans KR', sans-serif" }}>
       <div style={{ position: 'absolute', top: 60, left: 60, fontSize: 28, fontWeight: 600, color: COLORS.textSub }}>
-        🍍 Week {String(draft.week).padStart(2, '0')} · 웹사이트
+        🍍 Week {String(draft.week).padStart(2, '0')} · {draft.website_name}
       </div>
       <div style={{ position: 'absolute', top: 180, left: 60, right: 60 }}>
         <div style={{ fontSize: 52, fontWeight: 700, lineHeight: 1.3, color: COLORS.text, letterSpacing: '-0.02em', marginBottom: 16 }}>

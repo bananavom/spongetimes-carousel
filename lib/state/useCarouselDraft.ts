@@ -31,6 +31,14 @@ const DEFAULT_DRAFT = {
   topic: '데굴데굴',
   authorHandle: '@spongeclub',
   
+  // 슬라이드 이름 (탭바, 파일명, 슬라이드 헤더에 모두 사용)
+  hero_name: '히어로',
+  team_name: '팀',
+  website_name: '웹사이트',
+  concept_name: '컨셉',
+  timeline_name: '타임라인',
+  outro_name: '마무리',
+  
   hero_mainText: '스폰지밥들이\n직접 집을 짓고 있다',
   hero_subText: '스폰지클럽을 잘 굴러가게 하는\n유닛이 있다?!',
   hero_images: [] as ImageItem[],

@@ -6,7 +6,7 @@ export function TimelineSlide({ draft }: { draft: CarouselDraft }) {
   return (
     <div style={{ width: 1080, height: 1350, background: COLORS.bodyBg, position: 'relative', overflow: 'hidden', fontFamily: "'Pretendard', 'Noto Sans KR', sans-serif" }}>
       <div style={{ position: 'absolute', top: 60, left: 60, fontSize: 28, fontWeight: 600, color: COLORS.textSub }}>
-        🍍 Week {String(draft.week).padStart(2, '0')} · 타임라인
+        🍍 Week {String(draft.week).padStart(2, '0')} · {draft.timeline_name}
       </div>
       <div style={{ position: 'absolute', top: 180, left: 60, right: 60, fontSize: 58, fontWeight: 700, lineHeight: 1.3, color: COLORS.text, textAlign: 'center' }}>
         {draft.timeline_title}

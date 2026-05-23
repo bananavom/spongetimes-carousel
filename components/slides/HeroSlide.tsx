@@ -6,7 +6,7 @@ export function HeroSlide({ draft }: { draft: CarouselDraft }) {
   return (
     <div style={{ width: 1080, height: 1350, background: COLORS.coverBg, position: 'relative', overflow: 'hidden', fontFamily: "'Pretendard', 'Noto Sans KR', sans-serif" }}>
       <div style={{ position: 'absolute', top: 60, left: 60, fontSize: 28, fontWeight: 600, color: COLORS.textSub }}>
-        🍍 Week {String(draft.week).padStart(2, '0')} · {draft.topic}
+        🍍 Week {String(draft.week).padStart(2, '0')} · {draft.hero_name}
       </div>
       <div style={{ position: 'absolute', top: 200, left: 60, right: 60, fontSize: 80, fontWeight: 800, lineHeight: 1.2, color: COLORS.text, letterSpacing: '-0.03em', whiteSpace: 'pre-line' }}>
         {draft.hero_mainText}

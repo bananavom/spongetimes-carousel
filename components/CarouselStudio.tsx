@@ -32,8 +32,16 @@ export function CarouselStudio() {
   }
 
   function getSlideNames() {
+    const names = [
+      draft.hero_name,
+      draft.team_name,
+      draft.website_name,
+      draft.concept_name,
+      draft.timeline_name,
+      draft.outro_name,
+    ];
     return Array.from({ length: NUM_SLIDES }, (_, i) =>
-      `degulgul-W${String(draft.week).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}-${SLIDE_LABELS[i]}.png`
+      `degulgul-W${String(draft.week).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}-${names[i]}.png`
     );
   }
 
@@ -84,6 +92,7 @@ export function CarouselStudio() {
       case 0:
         return (
           <>
+            <TextField label="📝 슬라이드 이름" value={draft.hero_name} onChange={(v) => update('hero_name', v)} placeholder="히어로" />
             <TextareaField label="메인 텍스트" value={draft.hero_mainText} onChange={(v) => update('hero_mainText', v)} rows={2} />
             <TextareaField label="서브 텍스트" value={draft.hero_subText} onChange={(v) => update('hero_subText', v)} rows={2} />
             <MultiImageEditor slideKey="hero" images={images} addImage={addImage} updateImage={updateImage} removeImage={removeImage} />
@@ -92,6 +101,7 @@ export function CarouselStudio() {
       case 1:
         return (
           <>
+            <TextField label="📝 슬라이드 이름" value={draft.team_name} onChange={(v) => update('team_name', v)} placeholder="팀" />
             <TextField label="제목 1" value={draft.team_title1} onChange={(v) => update('team_title1', v)} />
             <TextField label="제목 2" value={draft.team_title2} onChange={(v) => update('team_title2', v)} />
             <TextareaField label="설명" value={draft.team_description} onChange={(v) => update('team_description', v)} rows={3} />
@@ -101,6 +111,7 @@ export function CarouselStudio() {
       case 2:
         return (
           <>
+            <TextField label="📝 슬라이드 이름" value={draft.website_name} onChange={(v) => update('website_name', v)} placeholder="웹사이트" />
             <TextField label="제목 1" value={draft.website_title1} onChange={(v) => update('website_title1', v)} />
             <TextField label="제목 2 (강조)" value={draft.website_title2} onChange={(v) => update('website_title2', v)} />
             <TextField label="제목 3" value={draft.website_title3} onChange={(v) => update('website_title3', v)} />
@@ -111,6 +122,7 @@ export function CarouselStudio() {
       case 3:
         return (
           <>
+            <TextField label="📝 슬라이드 이름" value={draft.concept_name} onChange={(v) => update('concept_name', v)} placeholder="컨셉" />
             <TextField label="제목 1" value={draft.concept_title1} onChange={(v) => update('concept_title1', v)} />
             <TextField label="제목 2" value={draft.concept_title2} onChange={(v) => update('concept_title2', v)} />
             <TextField label="강조 텍스트" value={draft.concept_emphasis} onChange={(v) => update('concept_emphasis', v)} />
@@ -122,6 +134,7 @@ export function CarouselStudio() {
       case 4:
         return (
           <>
+            <TextField label="📝 슬라이드 이름" value={draft.timeline_name} onChange={(v) => update('timeline_name', v)} placeholder="타임라인" />
             <TextField label="제목" value={draft.timeline_title} onChange={(v) => update('timeline_title', v)} />
             <TextField label="부제목" value={draft.timeline_subtitle} onChange={(v) => update('timeline_subtitle', v)} />
             <TextField label="설명" value={draft.timeline_description} onChange={(v) => update('timeline_description', v)} />
@@ -131,6 +144,7 @@ export function CarouselStudio() {
       case 5:
         return (
           <>
+            <TextField label="📝 슬라이드 이름" value={draft.outro_name} onChange={(v) => update('outro_name', v)} placeholder="마무리" />
             <TextField label="메인 텍스트" value={draft.outro_mainText} onChange={(v) => update('outro_mainText', v)} />
             <TextField label="본문 1" value={draft.outro_body1} onChange={(v) => update('outro_body1', v)} />
             <TextField label="본문 2" value={draft.outro_body2} onChange={(v) => update('outro_body2', v)} />
@@ -176,7 +190,7 @@ export function CarouselStudio() {
         </div>
 
         <div className="tab-bar">
-          {SLIDE_LABELS.map((label, i) => (
+          {[draft.hero_name, draft.team_name, draft.website_name, draft.concept_name, draft.timeline_name, draft.outro_name].map((label, i) => (
             <button
               key={i}
               className={`tab-item${activeTab === i ? ' active' : ''}`}
@@ -195,7 +209,7 @@ export function CarouselStudio() {
       {/* 우측: 미리보기 */}
       <div className="studio-preview">
         <div style={{ marginBottom: 16, fontSize: 14, color: '#666' }}>
-          현재 슬라이드: {activeTab + 1}. {SLIDE_LABELS[activeTab]}
+          현재 슬라이드: {activeTab + 1}. {[draft.hero_name, draft.team_name, draft.website_name, draft.concept_name, draft.timeline_name, draft.outro_name][activeTab]}
         </div>
         <div className="preview-frame">
           <div style={{ transform: 'scale(0.37)', transformOrigin: 'top left', width: 1080, height: 1350 }}>
