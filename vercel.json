@@ -1,0 +1,11 @@
+{
+  "name": "spongetimes-carousel",
+  "version": 2,
+  "buildCommand": "npm run build",
+  "public": true,
+  "env": {
+    "NODE_ENV": {
+      "default": "production"
+    }
+  }
+}
