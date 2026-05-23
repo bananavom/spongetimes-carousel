@@ -1,9 +1,9 @@
 export const COLORS = {
-  coverBg: '#FFF8E1',
-  bodyBg: '#FFFEF7',
-  text: '#2C2C2C',
-  highlight: '#FFD54F',
-  textSub: '#666666',
+  coverBg: '#FEE67A',
+  bodyBg: '#FDFCEA',
+  text: '#000000',
+  highlight: '#87CEEB',
+  textSub: '#555555',
   border: '#E0DDD0',
   accent: '#FF6B9D',
 } as const;

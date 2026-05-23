@@ -422,3 +422,53 @@ html, body {
   border-top: 1px solid #f3f4f6;
   background: #fafafa;
 }
+
+/* ── 업로드 버튼 그룹 ─── */
+.upload-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-add-media {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #fff;
+}
+
+.btn-add-image {
+  background: #FF6B9D;
+}
+
+.btn-add-image:hover:not(:disabled) {
+  background: #FF4D87;
+}
+
+.btn-add-video {
+  background: #6366f1;
+}
+
+.btn-add-video:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.btn-add-media:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* 영상 썸네일 */
+.video-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+}

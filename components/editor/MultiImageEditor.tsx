@@ -8,7 +8,7 @@ import { RangeField, SelectField } from './Fields';
 type MultiImageEditorProps = {
   slideKey: ImageSlideKey;
   images: ImageItem[];
-  addImage: (slideKey: ImageSlideKey, src: string) => void;
+  addImage: (slideKey: ImageSlideKey, src: string, type?: 'image' | 'video') => void;
   updateImage: (slideKey: ImageSlideKey, imageId: string, updates: Partial<ImageItem>) => void;
   removeImage: (slideKey: ImageSlideKey, imageId: string) => void;
 };
@@ -20,19 +20,41 @@ export function MultiImageEditor({
   updateImage,
   removeImage,
 }: MultiImageEditorProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
-  function handleFile(e: ChangeEvent<HTMLInputElement>) {
+  function handleImageFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
       if (ev.target?.result) {
-        addImage(slideKey, ev.target.result as string);
+        addImage(slideKey, ev.target.result as string, 'image');
       }
     };
     reader.readAsDataURL(file);
-    // 같은 파일 다시 선택 가능하게
+    e.target.value = '';
+  }
+
+  function handleVideoFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // 영상 파일 크기 체크 (50MB 제한)
+    const maxSize = 50 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert('영상 파일은 50MB 이하만 업로드 가능합니다.');
+      e.target.value = '';
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      if (ev.target?.result) {
+        addImage(slideKey, ev.target.result as string, 'video');
+      }
+    };
+    reader.readAsDataURL(file);
     e.target.value = '';
   }
 
@@ -42,28 +64,53 @@ export function MultiImageEditor({
     <div className="multi-image-section">
       <div className="multi-image-header">
         <label className="field-label">
-          🖼️ 이미지 ({images.length} / {MAX_IMAGES_PER_SLIDE})
+          🖼️ 미디어 ({images.length} / {MAX_IMAGES_PER_SLIDE})
         </label>
+      </div>
+
+      {/* 업로드 버튼 그룹 */}
+      <div className="upload-buttons">
         <button
-          className="btn-add-image"
-          onClick={() => fileInputRef.current?.click()}
+          className="btn-add-media btn-add-image"
+          onClick={() => imageInputRef.current?.click()}
           disabled={!canAddMore}
           type="button"
         >
-          {canAddMore ? '+ 이미지 추가' : '최대 개수 도달'}
+          📷 이미지 추가
+        </button>
+        <button
+          className="btn-add-media btn-add-video"
+          onClick={() => videoInputRef.current?.click()}
+          disabled={!canAddMore}
+          type="button"
+        >
+          🎥 영상 추가
         </button>
         <input
-          ref={fileInputRef}
+          ref={imageInputRef}
           type="file"
           accept="image/*"
           style={{ display: 'none' }}
-          onChange={handleFile}
+          onChange={handleImageFile}
+        />
+        <input
+          ref={videoInputRef}
+          type="file"
+          accept="video/*"
+          style={{ display: 'none' }}
+          onChange={handleVideoFile}
         />
       </div>
 
+      {!canAddMore && (
+        <div style={{ fontSize: 12, color: '#ef4444', marginTop: 8, textAlign: 'center' }}>
+          최대 {MAX_IMAGES_PER_SLIDE}개까지 추가 가능합니다
+        </div>
+      )}
+
       {images.length === 0 && (
-        <div className="empty-images" onClick={() => fileInputRef.current?.click()}>
-          📁 클릭해서 첫 이미지 추가
+        <div className="empty-images">
+          📁 위 버튼을 눌러 첫 미디어를 추가하세요
         </div>
       )}
 
@@ -82,7 +129,7 @@ export function MultiImageEditor({
   );
 }
 
-/* ── 개별 이미지 카드 (접기/펼치기) ── */
+/* ── 개별 이미지/영상 카드 (접기/펼치기) ── */
 function ImageCard({
   index,
   image,
@@ -95,15 +142,23 @@ function ImageCard({
   onRemove: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const isVideo = image.type === 'video';
 
   return (
     <div className={`image-card${expanded ? ' expanded' : ''}`}>
-      {/* 카드 헤더 (썸네일 + 제어 버튼) */}
       <div className="image-card-header">
         <div className="image-card-info" onClick={() => setExpanded(!expanded)}>
-          <img src={image.src} alt="" className="image-card-thumb" />
+          {isVideo ? (
+            <div className="image-card-thumb video-thumb">
+              🎥
+            </div>
+          ) : (
+            <img src={image.src} alt="" className="image-card-thumb" />
+          )}
           <div className="image-card-meta">
-            <div className="image-card-title">이미지 {index}</div>
+            <div className="image-card-title">
+              {isVideo ? '🎥' : '📷'} {isVideo ? '영상' : '이미지'} {index}
+            </div>
             <div className="image-card-desc">
               {image.size}px · {image.animation === 'none' ? '정적' : image.animation}
             </div>
@@ -129,7 +184,6 @@ function ImageCard({
         </div>
       </div>
 
-      {/* 펼쳐졌을 때 조정 컨트롤 */}
       {expanded && (
         <div className="image-card-body">
           <RangeField
@@ -154,20 +208,29 @@ function ImageCard({
             max={900}
             step={10}
           />
-          <SelectField
-            label="애니메이션"
-            value={image.animation}
-            onChange={(v) => onUpdate({ animation: v as any })}
-            options={ANIMATION_OPTIONS}
-          />
-          {image.animation !== 'none' && (
-            <RangeField
-              label="속도(초)"
-              value={image.duration}
-              onChange={(v) => onUpdate({ duration: v })}
-              min={1}
-              max={10}
-            />
+          {!isVideo && (
+            <>
+              <SelectField
+                label="애니메이션"
+                value={image.animation}
+                onChange={(v) => onUpdate({ animation: v as any })}
+                options={ANIMATION_OPTIONS}
+              />
+              {image.animation !== 'none' && (
+                <RangeField
+                  label="속도(초)"
+                  value={image.duration}
+                  onChange={(v) => onUpdate({ duration: v })}
+                  min={1}
+                  max={10}
+                />
+              )}
+            </>
+          )}
+          {isVideo && (
+            <div style={{ fontSize: 12, color: '#6b7280', padding: 8, background: '#f9fafb', borderRadius: 4 }}>
+              💡 영상은 자동 재생/반복됩니다
+            </div>
           )}
         </div>
       )}

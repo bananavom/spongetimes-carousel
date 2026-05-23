@@ -3,10 +3,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { AnimationType } from '@/lib/tokens';
 
-// 이미지 아이템 타입
+// 미디어 아이템 타입 (이미지 또는 영상)
 export type ImageItem = {
   id: string;
   src: string;
+  type: 'image' | 'video';  // 미디어 타입
   x: number;
   y: number;
   size: number;
@@ -14,10 +15,11 @@ export type ImageItem = {
   duration: number;
 };
 
-export function createImageItem(src: string): ImageItem {
+export function createImageItem(src: string, type: 'image' | 'video' = 'image'): ImageItem {
   return {
     id: `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     src,
+    type,
     x: 540,
     y: 700,
     size: 400,
@@ -114,14 +116,14 @@ export function useCarouselDraft() {
     setDraft((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const addImage = useCallback((slideKey: ImageSlideKey, src: string) => {
+  const addImage = useCallback((slideKey: ImageSlideKey, src: string, type: 'image' | 'video' = 'image') => {
     setDraft((prev) => {
       const key = `${slideKey}_images` as keyof CarouselDraft;
       const current = prev[key] as ImageItem[];
       if (current.length >= MAX_IMAGES_PER_SLIDE) return prev;
       return {
         ...prev,
-        [key]: [...current, createImageItem(src)],
+        [key]: [...current, createImageItem(src, type)],
       };
     });
   }, []);
