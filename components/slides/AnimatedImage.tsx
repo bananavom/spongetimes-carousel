@@ -1,5 +1,10 @@
-import type { ImageItem } from '@/lib/state/useCarouselDraft';
+'use client';
 
+import type { ImageItem } from '@/lib/state/useCarouselDraft';
+import { DraggableBox } from './DraggableBox';
+import { useSelection } from '@/lib/state/SelectionContext';
+
+// 정적 렌더링 (PNG 캡처용 - 드래그 없음)
 export function AnimatedImage({ image }: { image: ImageItem }) {
   const commonStyle: React.CSSProperties = {
     position: 'absolute',
@@ -14,7 +19,6 @@ export function AnimatedImage({ image }: { image: ImageItem }) {
       : undefined,
   };
 
-  // 영상인 경우
   if (image.type === 'video') {
     return (
       <video
@@ -28,13 +32,8 @@ export function AnimatedImage({ image }: { image: ImageItem }) {
     );
   }
 
-  // 이미지인 경우 (기본)
   return (
-    <img
-      src={image.src}
-      alt=""
-      style={commonStyle}
-    />
+    <img src={image.src} alt="" style={commonStyle} />
   );
 }
 
@@ -43,6 +42,81 @@ export function MultiImages({ images }: { images: ImageItem[] }) {
     <>
       {images.map((img) => (
         <AnimatedImage key={img.id} image={img} />
+      ))}
+    </>
+  );
+}
+
+// 드래그 가능한 이미지 (편집용)
+export function DraggableImage({ 
+  image, 
+  onUpdate,
+  containerScale = 0.37,
+}: { 
+  image: ImageItem;
+  onUpdate: (updates: Partial<ImageItem>) => void;
+  containerScale?: number;
+}) {
+  const { selectedId, setSelectedId } = useSelection();
+  const selected = selectedId === image.id;
+
+  const innerStyle: React.CSSProperties = {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    animation: image.animation !== 'none' 
+      ? `${image.animation} ${image.duration}s ease-in-out infinite` 
+      : undefined,
+    pointerEvents: 'none',
+  };
+
+  return (
+    <DraggableBox
+      x={image.x}
+      y={image.y}
+      width={image.size}
+      height={image.size}
+      aspectRatio={1}
+      containerWidth={1080}
+      containerHeight={1350}
+      containerScale={containerScale}
+      selected={selected}
+      onSelect={() => setSelectedId(image.id)}
+      onChange={(updates) => {
+        const newUpdates: Partial<ImageItem> = {};
+        if (updates.x !== undefined) newUpdates.x = updates.x;
+        if (updates.y !== undefined) newUpdates.y = updates.y;
+        if (updates.width !== undefined) newUpdates.size = updates.width;
+        onUpdate(newUpdates);
+      }}
+    >
+      {image.type === 'video' ? (
+        <video src={image.src} style={innerStyle} autoPlay loop muted playsInline />
+      ) : (
+        <img src={image.src} alt="" style={innerStyle} draggable={false} />
+      )}
+    </DraggableBox>
+  );
+}
+
+export function DraggableMultiImages({ 
+  images, 
+  onUpdate,
+  containerScale,
+}: { 
+  images: ImageItem[];
+  onUpdate: (id: string, updates: Partial<ImageItem>) => void;
+  containerScale?: number;
+}) {
+  return (
+    <>
+      {images.map((img) => (
+        <DraggableImage 
+          key={img.id} 
+          image={img} 
+          onUpdate={(updates) => onUpdate(img.id, updates)}
+          containerScale={containerScale}
+        />
       ))}
     </>
   );

@@ -1,8 +1,18 @@
 import { COLORS } from '@/lib/tokens';
-import type { CarouselDraft } from '@/lib/state/useCarouselDraft';
-import { MultiImages } from './AnimatedImage';
+import type { CarouselDraft, ImageItem } from '@/lib/state/useCarouselDraft';
+import { MultiImages, DraggableMultiImages } from './AnimatedImage';
 
-export function WebsiteSlide({ draft }: { draft: CarouselDraft }) {
+export function WebsiteSlide({ 
+  draft, 
+  editable = false,
+  onImageUpdate,
+  containerScale,
+}: { 
+  draft: CarouselDraft;
+  editable?: boolean;
+  onImageUpdate?: (id: string, updates: Partial<ImageItem>) => void;
+  containerScale?: number;
+}) {
   return (
     <div style={{ width: 1080, height: 1350, background: COLORS.bodyBg, position: 'relative', overflow: 'hidden', fontFamily: "'Pretendard', 'Noto Sans KR', sans-serif" }}>
       <div style={{ position: 'absolute', top: 60, left: 60, fontSize: 28, fontWeight: 600, color: COLORS.textSub }}>
@@ -19,7 +29,11 @@ export function WebsiteSlide({ draft }: { draft: CarouselDraft }) {
           {draft.website_title3}
         </div>
       </div>
-      <MultiImages images={draft.website_images} />
+      {editable && onImageUpdate ? (
+        <DraggableMultiImages images={draft.website_images} onUpdate={onImageUpdate} containerScale={containerScale} />
+      ) : (
+        <MultiImages images={draft.website_images} />
+      )}
       <div style={{ position: 'absolute', bottom: 150, left: 60, right: 60, fontSize: 38, fontWeight: 500, lineHeight: 1.5, color: COLORS.textSub, whiteSpace: 'pre-line', textAlign: 'center' }}>
         {draft.website_subTitle}
       </div>
