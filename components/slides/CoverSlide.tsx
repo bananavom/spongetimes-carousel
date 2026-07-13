@@ -7,6 +7,10 @@ const PADX = Math.round(1080 * 0.07);   // 좌우 7%
 const PADTOP = Math.round(1350 * 0.06); // 상단 6%
 const PADBOT = Math.round(1350 * 0.05); // 하단 5%
 
+// 밝은 노란색 코너 1/4 원 데코 (우상단·좌하단)
+const DECO_COLOR = '#FFF3AE';
+const DECO_D = 640; // 지름 (중심을 코너에 두어 정확히 1/4만 노출)
+
 export function CoverSlide({
   draft,
   editable = false,
@@ -32,6 +36,10 @@ export function CoverSlide({
         color: COLORS.textPrimary,
       }}
     >
+      {/* 코너 1/4 원 데코 (밝은 노란색) — 우상단 · 좌하단 */}
+      <div style={{ position: 'absolute', top: -DECO_D / 2, right: -DECO_D / 2, width: DECO_D, height: DECO_D, borderRadius: '50%', background: DECO_COLOR, zIndex: 0 }} />
+      <div style={{ position: 'absolute', bottom: -DECO_D / 2, left: -DECO_D / 2, width: DECO_D, height: DECO_D, borderRadius: '50%', background: DECO_COLOR, zIndex: 0 }} />
+
       {/* 헤더 */}
       <div
         style={{
@@ -45,6 +53,7 @@ export function CoverSlide({
           fontSize: px(10),
           fontWeight: 500,
           color: COLORS.mutedLow,
+          zIndex: 1,
         }}
       >
         <span style={{ letterSpacing: '0.15em' }}>SPONGE TIMES</span>
@@ -52,16 +61,16 @@ export function CoverSlide({
       </div>
 
       {/* 라벨 (다크 알약) */}
-      <div style={{ position: 'absolute', top: PADTOP + px(34), left: PADX }}>
+      <div style={{ position: 'absolute', top: PADTOP + px(40), left: PADX, zIndex: 1 }}>
         <span
           style={{
             display: 'inline-block',
             background: COLORS.cardDark,
             color: COLORS.textOnDark,
-            fontSize: px(12),
-            fontWeight: 500,
-            letterSpacing: '0.02em',
-            padding: `${px(6)}px ${px(14)}px`,
+            fontSize: px(15),
+            fontWeight: 600,
+            letterSpacing: '0.01em',
+            padding: `${px(9)}px ${px(20)}px`,
             borderRadius: RADIUS.pill,
           }}
         >
@@ -81,6 +90,7 @@ export function CoverSlide({
           lineHeight: 1.15,
           letterSpacing: '-0.025em',
           textAlign: 'left',
+          zIndex: 1,
         }}
       >
         <Highlighted text={draft.cover_mainTitle} highlight={draft.cover_highlight} fontSize={px(40)} />
@@ -106,6 +116,7 @@ export function CoverSlide({
           fontSize: px(10),
           fontWeight: 500,
           color: COLORS.mutedLow,
+          zIndex: 1,
         }}
       >
         <span>@spongeclub</span>
