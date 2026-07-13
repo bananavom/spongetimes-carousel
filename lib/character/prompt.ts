@@ -1,9 +1,9 @@
 // 캐릭터 AI 프롬프트 생성 (04-character-prompt.md 기반)
 // 발행자/콘텐츠 유형/슬라이드 타입 → 외부 AI 도구(Midjourney·DALL-E 등)용 영문 프롬프트
 
-import { PUBLISHER_META, Publisher, ContentType } from '@/lib/tokens';
+import { PUBLISHER_META, Publisher, ContentType, SLOWQUICK_9_POSES } from '@/lib/tokens';
 
-type SlideType = 'cover' | 'cta';
+type SlideType = 'cover' | 'cta' | 'body';
 
 // 콘텐츠 유형별 포즈 풀 (표지/본문용)
 const CONTENT_POSES: Record<ContentType, string[]> = {
@@ -52,12 +52,14 @@ export function generateCharacterPrompt({
   slideType,
   seed = 0,
   customPose = '',
+  poseIndex,
 }: {
   publisher: Publisher;
   contentType: ContentType;
   slideType: SlideType;
   seed?: number;
   customPose?: string;
+  poseIndex?: number; // 슬로우퀵 9포즈 인덱스 (0~8), 지정 시 우선
 }): string {
   const colorName = PUBLISHER_META[publisher].colorName;
 
@@ -71,8 +73,12 @@ export function generateCharacterPrompt({
   let pose: string;
   if (customPose.trim()) {
     pose = customPose.trim();
+  } else if (publisher === '슬로우퀵' && poseIndex != null && SLOWQUICK_9_POSES[poseIndex]) {
+    pose = SLOWQUICK_9_POSES[poseIndex].prompt;
   } else if (slideType === 'cta') {
     pose = pick(CTA_POSES, seed);
+  } else if (slideType === 'body') {
+    pose = pick(CONTENT_POSES[contentType], seed);
   } else {
     pose = pick(CONTENT_POSES[contentType], seed);
   }

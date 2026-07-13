@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import type { AnimationType, ContentType, Publisher } from '@/lib/tokens';
+import type { AnimationType, ContentType, Publisher, BodyTemplate } from '@/lib/tokens';
+import { createBodySlide, type BodySlide } from '@/lib/state/bodySlide';
 
 // 미디어 아이템 타입 (캐릭터 이미지 또는 영상)
 export type ImageItem = {
@@ -47,6 +48,9 @@ const DEFAULT_DRAFT = {
   cta_questionHighlight: '가장 기억에 남는',
   cta_message: '봄이 던지는 질문이에요 ✨\n댓글로 이야기 들려주세요',
   cta_character: '' as string, // 데이터 URL (고정 슬롯, 드래그 없음)
+
+  // 본문 슬라이드 (표지 → 본문 1..N → CTA)
+  bodySlides: [] as BodySlide[],
 };
 
 export type CarouselDraft = typeof DEFAULT_DRAFT;
@@ -54,7 +58,7 @@ export type ImageSlideKey = 'cover'; // 다중 이미지(드래그) 슬라이드
 
 export const MAX_IMAGES_PER_SLIDE = 4;
 
-const STORAGE_KEY = 'spongetimes-2gi-draft:v2';
+const STORAGE_KEY = 'spongetimes-2gi-draft:v3';
 
 export function useCarouselDraft() {
   const [draft, setDraft] = useState<CarouselDraft>(DEFAULT_DRAFT);
@@ -128,10 +132,67 @@ export function useCarouselDraft() {
     });
   }, []);
 
+  /* ── 본문 슬라이드 CRUD ── */
+  const addBody = useCallback((template: BodyTemplate) => {
+    setDraft((prev) => ({ ...prev, bodySlides: [...prev.bodySlides, createBodySlide(template)] }));
+  }, []);
+
+  const updateBody = useCallback((id: string, patch: Partial<BodySlide>) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) => (b.id === id ? { ...b, ...patch } : b)),
+    }));
+  }, []);
+
+  const removeBody = useCallback((id: string) => {
+    setDraft((prev) => ({ ...prev, bodySlides: prev.bodySlides.filter((b) => b.id !== id) }));
+  }, []);
+
+  const moveBody = useCallback((id: string, dir: -1 | 1) => {
+    setDraft((prev) => {
+      const arr = [...prev.bodySlides];
+      const i = arr.findIndex((b) => b.id === id);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= arr.length) return prev;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      return { ...prev, bodySlides: arr };
+    });
+  }, []);
+
+  const setBodyImage = useCallback((id: string, src: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) =>
+        b.id === id ? { ...b, image: { ...b.image, on: true, item: createImageItem(src) } } : b
+      ),
+    }));
+  }, []);
+
+  const clearBodyImage = useCallback((id: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) =>
+        b.id === id ? { ...b, image: { ...b.image, item: null } } : b
+      ),
+    }));
+  }, []);
+
+  const updateBodyImageItem = useCallback((id: string, patch: Partial<ImageItem>) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) =>
+        b.id === id && b.image.item ? { ...b, image: { ...b.image, item: { ...b.image.item, ...patch } } } : b
+      ),
+    }));
+  }, []);
+
   const reset = useCallback(() => {
     setDraft(DEFAULT_DRAFT);
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  return { draft, update, addImage, updateImage, removeImage, reset, isLoaded };
+  return {
+    draft, update, addImage, updateImage, removeImage, reset, isLoaded,
+    addBody, updateBody, removeBody, moveBody, setBodyImage, clearBodyImage, updateBodyImageItem,
+  };
 }
