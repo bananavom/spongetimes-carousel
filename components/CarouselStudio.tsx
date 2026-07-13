@@ -2,7 +2,7 @@
 
 import { createRef, RefObject, useRef, useState } from 'react';
 import { useCarouselDraft, CarouselDraft, ImageSlideKey, ImageItem } from '@/lib/state/useCarouselDraft';
-import { SLIDE_LABELS } from '@/lib/tokens';
+import { TOTAL_WEEKS } from '@/lib/tokens';
 import { downloadSlide, downloadAllAsZip } from '@/lib/utils/exportImage';
 import { recordSlideToVideo } from '@/lib/utils/exportVideo';
 import { SelectionProvider, useSelection } from '@/lib/state/SelectionContext';
@@ -53,7 +53,7 @@ function CarouselStudioInner() {
       draft.outro_name,
     ];
     return Array.from({ length: NUM_SLIDES }, (_, i) =>
-      `degulgul-W${String(draft.week).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}-${names[i]}.png`
+      `spongetimes-2gi-W${String(draft.week).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}-${names[i]}.png`
     );
   }
 
@@ -88,7 +88,7 @@ function CarouselStudioInner() {
     if (nodes.length === 0) return;
     setExporting(true);
     try {
-      await downloadAllAsZip(nodes, `degulgul-W${String(draft.week).padStart(2, '0')}.zip`, getSlideNames());
+      await downloadAllAsZip(nodes, `spongetimes-2gi-W${String(draft.week).padStart(2, '0')}.zip`, getSlideNames());
     } finally {
       setExporting(false);
     }
@@ -238,7 +238,7 @@ function CarouselStudioInner() {
       {/* 좌측: 에디터 */}
       <div className="studio-editor">
         <div className="studio-topbar">
-          <h1>🍍 데굴데굴 캐러셀</h1>
+          <h1>🍍 스폰지타임즈 2기 캐러셀</h1>
           <div className="topbar-actions">
             <button className="btn-secondary" onClick={handleDownloadCurrent} disabled={exporting}>
               {exporting ? '...' : '📷 PNG'}
@@ -254,8 +254,8 @@ function CarouselStudioInner() {
 
         <div className="common-fields-section">
           <div className="common-fields-title">공통 설정</div>
-          <NumberField label="Week 번호" value={draft.week} onChange={(v) => update('week', v)} min={1} max={7} />
-          <TextField label="주제" value={draft.topic} onChange={(v) => update('topic', v)} placeholder="데굴데굴" />
+          <NumberField label="Week 번호" value={draft.week} onChange={(v) => update('week', v)} min={1} max={TOTAL_WEEKS} />
+          <TextField label="주제" value={draft.topic} onChange={(v) => update('topic', v)} placeholder="스폰지타임즈 2기" />
           <TextField label="작성자 핸들" value={draft.authorHandle} onChange={(v) => update('authorHandle', v)} placeholder="@spongeclub" />
         </div>
 

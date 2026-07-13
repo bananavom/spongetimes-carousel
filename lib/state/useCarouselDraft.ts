@@ -29,54 +29,54 @@ export function createImageItem(src: string, type: 'image' | 'video' = 'image'):
 }
 
 const DEFAULT_DRAFT = {
-  week: 2,
-  topic: '데굴데굴',
+  week: 1,
+  topic: '스폰지타임즈 2기',
   authorHandle: '@spongeclub',
-  
+
   // 슬라이드 이름 (탭바, 파일명, 슬라이드 헤더에 모두 사용)
-  hero_name: '히어로',
-  team_name: '팀',
-  website_name: '웹사이트',
+  hero_name: '표지',
+  team_name: '편집팀',
+  website_name: '매거진 소개',
   concept_name: '컨셉',
   timeline_name: '타임라인',
-  outro_name: '마무리',
-  
-  hero_mainText: '스폰지밥들이\n직접 집을 짓고 있다',
-  hero_subText: '스폰지클럽을 잘 굴러가게 하는\n유닛이 있다?!',
+  outro_name: 'CTA',
+
+  hero_mainText: '스폰지타임즈\n2기, 오늘 창간',
+  hero_subText: '스폰지클럽 안에서 일어나는 일을\n매주 전하는 매거진',
   hero_images: [] as ImageItem[],
-  
-  team_title1: '스폰지클럽엔',
-  team_title2: '"데굴데굴" 이라는 유닛이 있다',
-  team_description: '70명이 7주를 같이 굴러가는 동안\n그 굴러간 흔적을 정리하고\n보여주는 스폰지들',
+
+  team_title1: '스폰지타임즈를 만드는',
+  team_title2: '4명의 편집팀',
+  team_description: '봄 · 위버 · 포비 · 필리줄리\n6주 동안 주 2~3회,\n스폰지클럽의 이야기를 기록합니다',
   team_images: [] as ImageItem[],
-  
-  website_title1: '이 유닛이 만들고 있는 건',
-  website_title2: '"스폰지클럽 7주 여정"',
-  website_title3: '을 보여주는 웹사이트.',
+
+  website_title1: '스폰지타임즈는',
+  website_title2: '"스폰지클럽 6주 여정"',
+  website_title3: '을 담는 매거진.',
   website_subTitle: '안에서 일어나는 일을\n밖에서도 볼 수 있게.',
   website_images: [] as ImageItem[],
-  
+
   concept_title1: '그런데 그냥',
-  concept_title2: '사이트가 아니라',
-  concept_emphasis: '게임이다.',
+  concept_title2: '소식지가 아니라',
+  concept_emphasis: '매거진이다.',
   concept_emphasis_x: 540,
   concept_emphasis_y: 600,
-  concept_emphasis_width: 400,
+  concept_emphasis_width: 460,
   concept_emphasis_height: 150,
   concept_emphasis_fontSize: 80,
-  concept_body1: '80명이 7주에 걸쳐',
-  concept_body2: '파인애플 집 한 채를 같이 짓는다.',
+  concept_body1: '스폰지클럽의 6주를',
+  concept_body2: '매주 이야기로 엮는다.',
   concept_images: [] as ImageItem[],
-  
+
   timeline_title: '한 주가 지날 때마다',
-  timeline_subtitle: '지금은 2주차',
-  timeline_description: '모래밭에 산호초가 막 돋는 중',
+  timeline_subtitle: '지금은 1주차',
+  timeline_description: '스폰지클럽 2기가 막 시작됐다',
   timeline_images: [] as ImageItem[],
-  
-  outro_mainText: '잘 굴러가고 있나요?',
-  outro_body1: '데굴데굴.',
-  outro_body2: '80명이 같이 굴러가는 7주.',
-  outro_body3: '다음 주엔 어디까지\n자랐을지, 또 보러 와요.',
+
+  outro_mainText: '이번 주도 잘 굴러가고 있나요?',
+  outro_body1: '스폰지타임즈.',
+  outro_body2: '스폰지클럽의 6주를 함께.',
+  outro_body3: '주 2~3회, 새로운 소식으로\n또 찾아올게요.',
   outro_images: [] as ImageItem[],
 };
 
@@ -85,7 +85,7 @@ export type ImageSlideKey = 'hero' | 'team' | 'website' | 'concept' | 'timeline'
 
 export const MAX_IMAGES_PER_SLIDE = 7;
 
-const STORAGE_KEY = 'degulgul-draft:v4';
+const STORAGE_KEY = 'spongetimes-2gi-draft:v1';
 
 export function useCarouselDraft() {
   const [draft, setDraft] = useState<CarouselDraft>(DEFAULT_DRAFT);
