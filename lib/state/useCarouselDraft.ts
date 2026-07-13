@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import type { AnimationType } from '@/lib/tokens';
+import type { AnimationType, ContentType, Publisher, BodyTemplate } from '@/lib/tokens';
+import { createBodySlide, type BodySlide } from '@/lib/state/bodySlide';
 
-// 미디어 아이템 타입 (이미지 또는 영상)
+// 미디어 아이템 타입 (캐릭터 이미지 또는 영상)
 export type ImageItem = {
   id: string;
   src: string;
-  type: 'image' | 'video';  // 미디어 타입
+  type: 'image' | 'video';
   x: number;
   y: number;
   size: number;
@@ -20,72 +21,44 @@ export function createImageItem(src: string, type: 'image' | 'video' = 'image'):
     id: `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     src,
     type,
-    x: 540,
-    y: 700,
-    size: 400,
+    x: 720,
+    y: 950,
+    size: 440,
     animation: 'none',
     duration: 3,
   };
 }
 
 const DEFAULT_DRAFT = {
-  week: 2,
-  topic: '데굴데굴',
-  authorHandle: '@spongeclub',
-  
-  // 슬라이드 이름 (탭바, 파일명, 슬라이드 헤더에 모두 사용)
-  hero_name: '히어로',
-  team_name: '팀',
-  website_name: '웹사이트',
-  concept_name: '컨셉',
-  timeline_name: '타임라인',
-  outro_name: '마무리',
-  
-  hero_mainText: '스폰지밥들이\n직접 집을 짓고 있다',
-  hero_subText: '스폰지클럽을 잘 굴러가게 하는\n유닛이 있다?!',
-  hero_images: [] as ImageItem[],
-  
-  team_title1: '스폰지클럽엔',
-  team_title2: '"데굴데굴" 이라는 유닛이 있다',
-  team_description: '70명이 7주를 같이 굴러가는 동안\n그 굴러간 흔적을 정리하고\n보여주는 스폰지들',
-  team_images: [] as ImageItem[],
-  
-  website_title1: '이 유닛이 만들고 있는 건',
-  website_title2: '"스폰지클럽 7주 여정"',
-  website_title3: '을 보여주는 웹사이트.',
-  website_subTitle: '안에서 일어나는 일을\n밖에서도 볼 수 있게.',
-  website_images: [] as ImageItem[],
-  
-  concept_title1: '그런데 그냥',
-  concept_title2: '사이트가 아니라',
-  concept_emphasis: '게임이다.',
-  concept_emphasis_x: 540,
-  concept_emphasis_y: 600,
-  concept_emphasis_width: 400,
-  concept_emphasis_height: 150,
-  concept_emphasis_fontSize: 80,
-  concept_body1: '80명이 7주에 걸쳐',
-  concept_body2: '파인애플 집 한 채를 같이 짓는다.',
-  concept_images: [] as ImageItem[],
-  
-  timeline_title: '한 주가 지날 때마다',
-  timeline_subtitle: '지금은 2주차',
-  timeline_description: '모래밭에 산호초가 막 돋는 중',
-  timeline_images: [] as ImageItem[],
-  
-  outro_mainText: '잘 굴러가고 있나요?',
-  outro_body1: '데굴데굴.',
-  outro_body2: '80명이 같이 굴러가는 7주.',
-  outro_body3: '다음 주엔 어디까지\n자랐을지, 또 보러 와요.',
-  outro_images: [] as ImageItem[],
+  // 공통 설정
+  week: 1,
+  year: 2026,
+  volume: 1,
+  contentType: '인사이트' as ContentType,
+  publisher: '봄' as Publisher,
+
+  // 표지 (Cover) — 01-cover.md
+  cover_mainTitle: '노션 캘린더\n자동화 스킬\n직접 써봤습니다',
+  cover_highlight: '자동화 스킬',
+  cover_images: [] as ImageItem[],
+
+  // CTA — 03-cta.md
+  cta_label: '💬 댓글로 이야기해요',
+  cta_question: '이번 주 워크샵에서\n가장 기억에 남는\n장면은 뭐였나요? 💭',
+  cta_questionHighlight: '가장 기억에 남는',
+  cta_message: '봄이 던지는 질문이에요 ✨\n댓글로 이야기 들려주세요',
+  cta_character: '' as string, // 데이터 URL (고정 슬롯, 드래그 없음)
+
+  // 본문 슬라이드 (표지 → 본문 1..N → CTA)
+  bodySlides: [] as BodySlide[],
 };
 
 export type CarouselDraft = typeof DEFAULT_DRAFT;
-export type ImageSlideKey = 'hero' | 'team' | 'website' | 'concept' | 'timeline' | 'outro';
+export type ImageSlideKey = 'cover'; // 다중 이미지(드래그) 슬라이드는 표지 캐릭터뿐
 
-export const MAX_IMAGES_PER_SLIDE = 7;
+export const MAX_IMAGES_PER_SLIDE = 4;
 
-const STORAGE_KEY = 'degulgul-draft:v4';
+const STORAGE_KEY = 'spongetimes-2gi-draft:v3';
 
 export function useCarouselDraft() {
   const [draft, setDraft] = useState<CarouselDraft>(DEFAULT_DRAFT);
@@ -159,10 +132,67 @@ export function useCarouselDraft() {
     });
   }, []);
 
+  /* ── 본문 슬라이드 CRUD ── */
+  const addBody = useCallback((template: BodyTemplate) => {
+    setDraft((prev) => ({ ...prev, bodySlides: [...prev.bodySlides, createBodySlide(template)] }));
+  }, []);
+
+  const updateBody = useCallback((id: string, patch: Partial<BodySlide>) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) => (b.id === id ? { ...b, ...patch } : b)),
+    }));
+  }, []);
+
+  const removeBody = useCallback((id: string) => {
+    setDraft((prev) => ({ ...prev, bodySlides: prev.bodySlides.filter((b) => b.id !== id) }));
+  }, []);
+
+  const moveBody = useCallback((id: string, dir: -1 | 1) => {
+    setDraft((prev) => {
+      const arr = [...prev.bodySlides];
+      const i = arr.findIndex((b) => b.id === id);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= arr.length) return prev;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      return { ...prev, bodySlides: arr };
+    });
+  }, []);
+
+  const setBodyImage = useCallback((id: string, src: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) =>
+        b.id === id ? { ...b, image: { ...b.image, on: true, item: createImageItem(src) } } : b
+      ),
+    }));
+  }, []);
+
+  const clearBodyImage = useCallback((id: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) =>
+        b.id === id ? { ...b, image: { ...b.image, item: null } } : b
+      ),
+    }));
+  }, []);
+
+  const updateBodyImageItem = useCallback((id: string, patch: Partial<ImageItem>) => {
+    setDraft((prev) => ({
+      ...prev,
+      bodySlides: prev.bodySlides.map((b) =>
+        b.id === id && b.image.item ? { ...b, image: { ...b.image, item: { ...b.image.item, ...patch } } } : b
+      ),
+    }));
+  }, []);
+
   const reset = useCallback(() => {
     setDraft(DEFAULT_DRAFT);
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  return { draft, update, addImage, updateImage, removeImage, reset, isLoaded };
+  return {
+    draft, update, addImage, updateImage, removeImage, reset, isLoaded,
+    addBody, updateBody, removeBody, moveBody, setBodyImage, clearBodyImage, updateBodyImageItem,
+  };
 }

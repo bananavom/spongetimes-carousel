@@ -123,6 +123,32 @@ export function RangeField({
   );
 }
 
+/* ── CheckboxField (옵션 on/off) ─── */
+export function CheckboxField({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <label
+      className="field-group"
+      style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', flexDirection: 'row' }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked)}
+        style={{ width: 16, height: 16, accentColor: '#1A1F36', cursor: 'pointer' }}
+      />
+      <span className="field-label" style={{ margin: 0 }}>{label}</span>
+    </label>
+  );
+}
+
 /* ── SelectField ─── */
 export function SelectField({
   label,
