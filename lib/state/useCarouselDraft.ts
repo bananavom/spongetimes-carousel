@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import type { AnimationType } from '@/lib/tokens';
+import type { AnimationType, ContentType, Publisher } from '@/lib/tokens';
 
-// 미디어 아이템 타입 (이미지 또는 영상)
+// 미디어 아이템 타입 (캐릭터 이미지 또는 영상)
 export type ImageItem = {
   id: string;
   src: string;
-  type: 'image' | 'video';  // 미디어 타입
+  type: 'image' | 'video';
   x: number;
   y: number;
   size: number;
@@ -20,72 +20,41 @@ export function createImageItem(src: string, type: 'image' | 'video' = 'image'):
     id: `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     src,
     type,
-    x: 540,
-    y: 700,
-    size: 400,
+    x: 720,
+    y: 950,
+    size: 440,
     animation: 'none',
     duration: 3,
   };
 }
 
 const DEFAULT_DRAFT = {
+  // 공통 설정
   week: 1,
-  topic: '스폰지타임즈 2기',
-  authorHandle: '@spongeclub',
+  year: 2026,
+  volume: 1,
+  contentType: '인사이트' as ContentType,
+  publisher: '봄' as Publisher,
 
-  // 슬라이드 이름 (탭바, 파일명, 슬라이드 헤더에 모두 사용)
-  hero_name: '표지',
-  team_name: '편집팀',
-  website_name: '매거진 소개',
-  concept_name: '컨셉',
-  timeline_name: '타임라인',
-  outro_name: 'CTA',
+  // 표지 (Cover) — 01-cover.md
+  cover_mainTitle: '노션 캘린더\n자동화 스킬\n직접 써봤습니다',
+  cover_highlight: '자동화 스킬',
+  cover_images: [] as ImageItem[],
 
-  hero_mainText: '스폰지타임즈\n2기, 오늘 창간',
-  hero_subText: '스폰지클럽 안에서 일어나는 일을\n매주 전하는 매거진',
-  hero_images: [] as ImageItem[],
-
-  team_title1: '스폰지타임즈를 만드는',
-  team_title2: '4명의 편집팀',
-  team_description: '봄 · 위버 · 포비 · 필리줄리\n6주 동안 주 2~3회,\n스폰지클럽의 이야기를 기록합니다',
-  team_images: [] as ImageItem[],
-
-  website_title1: '스폰지타임즈는',
-  website_title2: '"스폰지클럽 6주 여정"',
-  website_title3: '을 담는 매거진.',
-  website_subTitle: '안에서 일어나는 일을\n밖에서도 볼 수 있게.',
-  website_images: [] as ImageItem[],
-
-  concept_title1: '그런데 그냥',
-  concept_title2: '소식지가 아니라',
-  concept_emphasis: '매거진이다.',
-  concept_emphasis_x: 540,
-  concept_emphasis_y: 600,
-  concept_emphasis_width: 460,
-  concept_emphasis_height: 150,
-  concept_emphasis_fontSize: 80,
-  concept_body1: '스폰지클럽의 6주를',
-  concept_body2: '매주 이야기로 엮는다.',
-  concept_images: [] as ImageItem[],
-
-  timeline_title: '한 주가 지날 때마다',
-  timeline_subtitle: '지금은 1주차',
-  timeline_description: '스폰지클럽 2기가 막 시작됐다',
-  timeline_images: [] as ImageItem[],
-
-  outro_mainText: '이번 주도 잘 굴러가고 있나요?',
-  outro_body1: '스폰지타임즈.',
-  outro_body2: '스폰지클럽의 6주를 함께.',
-  outro_body3: '주 2~3회, 새로운 소식으로\n또 찾아올게요.',
-  outro_images: [] as ImageItem[],
+  // CTA — 03-cta.md
+  cta_label: '💬 댓글로 이야기해요',
+  cta_question: '이번 주 워크샵에서\n가장 기억에 남는\n장면은 뭐였나요? 💭',
+  cta_questionHighlight: '가장 기억에 남는',
+  cta_message: '봄이 던지는 질문이에요 ✨\n댓글로 이야기 들려주세요',
+  cta_character: '' as string, // 데이터 URL (고정 슬롯, 드래그 없음)
 };
 
 export type CarouselDraft = typeof DEFAULT_DRAFT;
-export type ImageSlideKey = 'hero' | 'team' | 'website' | 'concept' | 'timeline' | 'outro';
+export type ImageSlideKey = 'cover'; // 다중 이미지(드래그) 슬라이드는 표지 캐릭터뿐
 
-export const MAX_IMAGES_PER_SLIDE = 7;
+export const MAX_IMAGES_PER_SLIDE = 4;
 
-const STORAGE_KEY = 'spongetimes-2gi-draft:v1';
+const STORAGE_KEY = 'spongetimes-2gi-draft:v2';
 
 export function useCarouselDraft() {
   const [draft, setDraft] = useState<CarouselDraft>(DEFAULT_DRAFT);
