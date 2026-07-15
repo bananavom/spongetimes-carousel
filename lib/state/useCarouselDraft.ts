@@ -11,12 +11,13 @@ export type ImageItem = {
   type: 'image' | 'video';
   x: number;
   y: number;
-  size: number;
+  size: number;      // 박스 너비(px). 높이는 size / aspect 로 파생
+  aspect: number;    // 자연 가로세로 비율(=W/H). 1 = 정사각
   animation: AnimationType;
   duration: number;
 };
 
-export function createImageItem(src: string, type: 'image' | 'video' = 'image'): ImageItem {
+export function createImageItem(src: string, type: 'image' | 'video' = 'image', aspect = 1): ImageItem {
   return {
     id: `img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     src,
@@ -24,6 +25,7 @@ export function createImageItem(src: string, type: 'image' | 'video' = 'image'):
     x: 720,
     y: 950,
     size: 440,
+    aspect: aspect || 1,
     animation: 'none',
     duration: 3,
   };
@@ -47,7 +49,7 @@ const DEFAULT_DRAFT = {
   cta_question: '이번 주 워크샵에서\n가장 기억에 남는\n장면은 뭐였나요? 💭',
   cta_questionHighlight: '가장 기억에 남는',
   cta_message: '봄이 던지는 질문이에요 ✨\n댓글로 이야기 들려주세요',
-  cta_character: '' as string, // 데이터 URL (고정 슬롯, 드래그 없음)
+  cta_character: null as ImageItem | null, // 고정 슬롯: 이미지/영상 택1
 
   // 본문 슬라이드 (표지 → 본문 1..N → CTA)
   bodySlides: [] as BodySlide[],
@@ -56,9 +58,9 @@ const DEFAULT_DRAFT = {
 export type CarouselDraft = typeof DEFAULT_DRAFT;
 export type ImageSlideKey = 'cover'; // 다중 이미지(드래그) 슬라이드는 표지 캐릭터뿐
 
-export const MAX_IMAGES_PER_SLIDE = 4;
+export const MAX_IMAGES_PER_SLIDE = 6;
 
-const STORAGE_KEY = 'spongetimes-2gi-draft:v3';
+const STORAGE_KEY = 'spongetimes-2gi-draft:v4';
 
 export function useCarouselDraft() {
   const [draft, setDraft] = useState<CarouselDraft>(DEFAULT_DRAFT);
@@ -94,14 +96,14 @@ export function useCarouselDraft() {
     setDraft((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const addImage = useCallback((slideKey: ImageSlideKey, src: string, type: 'image' | 'video' = 'image') => {
+  const addImage = useCallback((slideKey: ImageSlideKey, src: string, type: 'image' | 'video' = 'image', aspect = 1) => {
     setDraft((prev) => {
       const key = `${slideKey}_images` as keyof CarouselDraft;
       const current = prev[key] as ImageItem[];
       if (current.length >= MAX_IMAGES_PER_SLIDE) return prev;
       return {
         ...prev,
-        [key]: [...current, createImageItem(src, type)],
+        [key]: [...current, createImageItem(src, type, aspect)],
       };
     });
   }, []);
@@ -159,29 +161,31 @@ export function useCarouselDraft() {
     });
   }, []);
 
-  const setBodyImage = useCallback((id: string, src: string) => {
+  const addBodyImage = useCallback((id: string, src: string, type: 'image' | 'video' = 'image', aspect = 1) => {
     setDraft((prev) => ({
       ...prev,
       bodySlides: prev.bodySlides.map((b) =>
-        b.id === id ? { ...b, image: { ...b.image, on: true, item: createImageItem(src) } } : b
+        b.id === id && b.images.length < MAX_IMAGES_PER_SLIDE
+          ? { ...b, images: [...b.images, createImageItem(src, type, aspect)] }
+          : b
       ),
     }));
   }, []);
 
-  const clearBodyImage = useCallback((id: string) => {
+  const updateBodyImage = useCallback((id: string, imgId: string, patch: Partial<ImageItem>) => {
     setDraft((prev) => ({
       ...prev,
       bodySlides: prev.bodySlides.map((b) =>
-        b.id === id ? { ...b, image: { ...b.image, item: null } } : b
+        b.id === id ? { ...b, images: b.images.map((im) => (im.id === imgId ? { ...im, ...patch } : im)) } : b
       ),
     }));
   }, []);
 
-  const updateBodyImageItem = useCallback((id: string, patch: Partial<ImageItem>) => {
+  const removeBodyImage = useCallback((id: string, imgId: string) => {
     setDraft((prev) => ({
       ...prev,
       bodySlides: prev.bodySlides.map((b) =>
-        b.id === id && b.image.item ? { ...b, image: { ...b.image, item: { ...b.image.item, ...patch } } } : b
+        b.id === id ? { ...b, images: b.images.filter((im) => im.id !== imgId) } : b
       ),
     }));
   }, []);
@@ -193,6 +197,6 @@ export function useCarouselDraft() {
 
   return {
     draft, update, addImage, updateImage, removeImage, reset, isLoaded,
-    addBody, updateBody, removeBody, moveBody, setBodyImage, clearBodyImage, updateBodyImageItem,
+    addBody, updateBody, removeBody, moveBody, addBodyImage, updateBodyImage, removeBodyImage,
   };
 }

@@ -92,7 +92,11 @@ export function CtaSlide({ draft }: { draft: CarouselDraft }) {
           }}
         >
           {draft.cta_character ? (
-            <img src={draft.cta_character} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            draft.cta_character.type === 'video' ? (
+              <video src={draft.cta_character.src} autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            ) : (
+              <img src={draft.cta_character.src} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            )
           ) : (
             <span style={{ fontSize: px(28) }}>🧽</span>
           )}

@@ -1,15 +1,16 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { useCarouselDraft, ImageItem } from '@/lib/state/useCarouselDraft';
+import { useCarouselDraft, ImageItem, createImageItem } from '@/lib/state/useCarouselDraft';
 import type { BodySlide } from '@/lib/state/bodySlide';
 import { TOTAL_WEEKS, CONTENT_TYPES, PUBLISHERS, ContentType, Publisher } from '@/lib/tokens';
 import { downloadSlide, downloadAllAsZip } from '@/lib/utils/exportImage';
 import { recordSlideToVideo } from '@/lib/utils/exportVideo';
+import { measureAspect } from '@/lib/utils/measureAspect';
 import { SelectionProvider, useSelection } from '@/lib/state/SelectionContext';
 import { generateCharacterPrompt } from '@/lib/character/prompt';
 
-import { TextField, TextareaField, NumberField, SelectField, ImageField } from './editor/Fields';
+import { TextField, TextareaField, NumberField, SelectField } from './editor/Fields';
 import { MultiImageEditor } from './editor/MultiImageEditor';
 import { BodyEditor } from './editor/body/BodyEditor';
 import { BodyListManager } from './editor/body/BodyListManager';
@@ -38,7 +39,7 @@ export function CarouselStudio() {
 function CarouselStudioInner() {
   const {
     draft, update, addImage, updateImage, removeImage, isLoaded,
-    addBody, updateBody, removeBody, moveBody, setBodyImage, clearBodyImage, updateBodyImageItem,
+    addBody, updateBody, removeBody, moveBody, addBodyImage, updateBodyImage, removeBodyImage,
   } = useCarouselDraft();
   const { setSelectedId } = useSelection();
   const [activeTab, setActiveTab] = useState(0);
@@ -133,7 +134,7 @@ function CarouselStudioInner() {
         index={entry.bodyIndex}
         total={totalBody}
         editable
-        onImageUpdate={(patch) => updateBodyImageItem(entry.body.id, patch)}
+        onImageUpdate={(imgId, patch) => updateBodyImage(entry.body.id, imgId, patch)}
         containerScale={PREVIEW_SCALE}
       />
     );
@@ -141,15 +142,19 @@ function CarouselStudioInner() {
 
   function renderEditor() {
     if (activeEntry.kind === 'cover') {
-      const images = draft.cover_images;
       return (
         <>
           <TextareaField label="메인 타이틀 (줄바꿈 = 실제 줄바꿈)" value={draft.cover_mainTitle} onChange={(v) => update('cover_mainTitle', v)} rows={3} />
           <TextField label="🖍️ 형광펜 강조 단어" value={draft.cover_highlight} onChange={(v) => update('cover_highlight', v)} placeholder="타이틀 안의 강조할 단어" />
           <div style={{ fontSize: 12, color: '#6b7280', padding: 8, background: '#f9fafb', borderRadius: 4, marginBottom: 12 }}>
-            🧸 캐릭터는 미리보기에서 클릭 후 드래그/리사이즈로 배치하세요 (우하단 권장)
+            🧸 캐릭터/미디어는 미리보기에서 클릭 후 드래그/리사이즈로 배치하세요 (우하단 권장)
           </div>
-          <MultiImageEditor slideKey="cover" images={images} addImage={addImage} updateImage={updateImage} removeImage={removeImage} />
+          <MultiImageEditor
+            images={draft.cover_images}
+            onAdd={(src, type, aspect) => addImage('cover', src, type, aspect)}
+            onUpdate={(id, patch) => updateImage('cover', id, patch)}
+            onRemove={(id) => removeImage('cover', id)}
+          />
         </>
       );
     }
@@ -160,7 +165,7 @@ function CarouselStudioInner() {
           <TextareaField label="질문 (줄바꿈 지원)" value={draft.cta_question} onChange={(v) => update('cta_question', v)} rows={3} />
           <TextField label="🖍️ 질문 형광펜 강조" value={draft.cta_questionHighlight} onChange={(v) => update('cta_questionHighlight', v)} placeholder="질문 안의 강조 단어" />
           <TextareaField label="발행자 자유 멘트 (캐릭터 우측, 2~3줄)" value={draft.cta_message} onChange={(v) => update('cta_message', v)} rows={3} />
-          <ImageField label="🧽 캐릭터 이미지" value={draft.cta_character || null} onChange={(v) => update('cta_character', v ?? '')} />
+          <CtaCharacterField value={draft.cta_character} onChange={(v) => update('cta_character', v)} />
         </>
       );
     }
@@ -169,15 +174,16 @@ function CarouselStudioInner() {
         slide={activeEntry.body}
         publisher={draft.publisher}
         updateBody={updateBody}
-        setBodyImage={setBodyImage}
-        clearBodyImage={clearBodyImage}
+        addBodyImage={addBodyImage}
+        updateBodyImage={updateBodyImage}
+        removeBodyImage={removeBodyImage}
       />
     );
   }
 
   // 캐릭터 프롬프트 패널 파라미터
   const promptSlideType = activeEntry.kind === 'cover' ? 'cover' : activeEntry.kind === 'cta' ? 'cta' : 'body';
-  const promptPoseIndex = activeEntry.kind === 'body' && draft.publisher === '슬로우퀵' ? activeEntry.body.image.pose : undefined;
+  const promptPoseIndex = activeEntry.kind === 'body' && draft.publisher === '슬로우퀵' ? activeEntry.body.pose : undefined;
 
   return (
     <div className="studio-layout">
@@ -249,7 +255,7 @@ function CarouselStudioInner() {
       <div className="studio-preview" onClick={() => setSelectedId(null)}>
         <div style={{ marginBottom: 16, fontSize: 14, color: '#666' }}>
           현재 슬라이드: {safeTab + 1} / {slideOrder.length} · {entryLabel(activeEntry)}
-          {(activeEntry.kind === 'cover' || (activeEntry.kind === 'body' && activeEntry.body.image.on)) && (
+          {(activeEntry.kind === 'cover' || (activeEntry.kind === 'body' && activeEntry.body.images.length > 0)) && (
             <span style={{ marginLeft: 12, color: '#999' }}>· 이미지 클릭 후 드래그/리사이즈</span>
           )}
         </div>
@@ -300,6 +306,50 @@ function CharacterPromptPanel({
       <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>
         Midjourney·DALL·E·나노바나나 등에 붙여넣어 캐릭터를 만든 뒤, 투명 PNG로 업로드하세요.
       </div>
+    </div>
+  );
+}
+
+/* ── CTA 캐릭터: 이미지/영상 택1 업로더 ── */
+function CtaCharacterField({ value, onChange }: { value: ImageItem | null; onChange: (v: ImageItem | null) => void }) {
+  const imgRef = useRef<HTMLInputElement>(null);
+  const vidRef = useRef<HTMLInputElement>(null);
+
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (type === 'video' && file.size > 50 * 1024 * 1024) {
+      alert('영상 파일은 50MB 이하만 업로드 가능합니다.');
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      if (ev.target?.result) {
+        const src = ev.target.result as string;
+        const aspect = await measureAspect(src, type);
+        onChange(createImageItem(src, type, aspect));
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
+  return (
+    <div className="field-group">
+      <label className="field-label">🧽 캐릭터 이미지/영상</label>
+      <div className="upload-buttons">
+        <button className="btn-add-media btn-add-image" type="button" onClick={() => imgRef.current?.click()}>📷 이미지</button>
+        <button className="btn-add-media btn-add-video" type="button" onClick={() => vidRef.current?.click()}>🎥 영상</button>
+        {value && <button className="btn-icon btn-remove" type="button" onClick={() => onChange(null)}>✕</button>}
+      </div>
+      <input ref={imgRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleFile(e, 'image')} />
+      <input ref={vidRef} type="file" accept="video/*" style={{ display: 'none' }} onChange={(e) => handleFile(e, 'video')} />
+      {value && (
+        <div style={{ marginTop: 8, fontSize: 12, color: '#6b7280' }}>
+          {value.type === 'video' ? '🎥 영상' : '📷 이미지'} 업로드됨
+        </div>
+      )}
     </div>
   );
 }

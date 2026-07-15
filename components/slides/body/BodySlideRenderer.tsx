@@ -20,7 +20,7 @@ export function BodySlideRenderer({
   index: number; // 1-based 본문 번호
   total: number; // 본문 총 장수
   editable?: boolean;
-  onImageUpdate?: (patch: Partial<ImageItem>) => void;
+  onImageUpdate?: (imgId: string, patch: Partial<ImageItem>) => void;
   containerScale?: number;
 }) {
   // SIDE_PROFILE 은 이미지를 자체 슬롯에 배치하므로 Host 자유 이미지 슬롯을 끔
