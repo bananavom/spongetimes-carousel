@@ -79,6 +79,7 @@ export function DraggableImage({
       width={image.size}
       height={image.size / aspect}
       aspectRatio={aspect}
+      maxSize={1000}
       containerWidth={1080}
       containerHeight={1350}
       containerScale={containerScale}
