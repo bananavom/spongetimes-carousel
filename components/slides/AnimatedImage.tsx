@@ -6,12 +6,13 @@ import { useSelection } from '@/lib/state/SelectionContext';
 
 // 정적 렌더링 (PNG 캡처용 - 드래그 없음)
 export function AnimatedImage({ image }: { image: ImageItem }) {
+  const aspect = image.aspect || 1;
   const commonStyle: React.CSSProperties = {
     position: 'absolute',
     left: image.x,
     top: image.y,
     width: image.size,
-    height: image.size,
+    height: image.size / aspect,
     objectFit: 'contain',
     transform: 'translate(-50%, -50%)',
     animation: image.animation !== 'none' 
@@ -59,13 +60,14 @@ export function DraggableImage({
 }) {
   const { selectedId, setSelectedId } = useSelection();
   const selected = selectedId === image.id;
+  const aspect = image.aspect || 1;
 
   const innerStyle: React.CSSProperties = {
     width: '100%',
     height: '100%',
     objectFit: 'contain',
-    animation: image.animation !== 'none' 
-      ? `${image.animation} ${image.duration}s ease-in-out infinite` 
+    animation: image.animation !== 'none'
+      ? `${image.animation} ${image.duration}s ease-in-out infinite`
       : undefined,
     pointerEvents: 'none',
   };
@@ -75,8 +77,8 @@ export function DraggableImage({
       x={image.x}
       y={image.y}
       width={image.size}
-      height={image.size}
-      aspectRatio={1}
+      height={image.size / aspect}
+      aspectRatio={aspect}
       containerWidth={1080}
       containerHeight={1350}
       containerScale={containerScale}

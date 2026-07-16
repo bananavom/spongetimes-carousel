@@ -1,12 +1,11 @@
 // 본문(Body) 슬라이드 데이터 모델 (DESIGN-BODY.md — README 요약 기반)
 
 import type { BodyTemplate, CirclePosition, CircleSize, CircleShape, PillColor } from '@/lib/tokens';
-import { createImageItem, type ImageItem } from '@/lib/state/useCarouselDraft';
+import type { ImageItem } from '@/lib/state/useCarouselDraft';
 
 export type Pill = { on: boolean; text: string; color: PillColor };
 export type Subcaption = { on: boolean; text: string };
 export type CircleDeco = { on: boolean; position: CirclePosition; size: CircleSize; shape: CircleShape };
-export type BodyImage = { on: boolean; item: ImageItem | null; pose: number };
 
 export type QuoteItem = { on: boolean; text: string; source: string };
 export type FlowItem = { on: boolean; person: string; line: string };
@@ -27,9 +26,10 @@ export type BodySlide = {
   heading: string;
   subcaption: Subcaption;
 
-  // 배경 데코 + 이미지 슬롯
+  // 배경 데코 + 이미지/영상 슬롯 (멀티)
   circle: CircleDeco;
-  image: BodyImage;
+  images: ImageItem[];
+  pose: number; // 슬로우퀵 9포즈 인덱스 (프롬프트용)
 
   // 템플릿별 콘텐츠 (전부 존재, template 로 렌더 분기)
   heroBody: string;                       // HERO
@@ -57,7 +57,8 @@ export function createBodySlide(template: BodyTemplate): BodySlide {
     heading: defaultHeading(template),
     subcaption: { on: true, text: '헤딩 아래 한 줄 부캡션' },
     circle: { on: template === 'HERO', position: 'top-right', size: 'md', shape: 'circle' },
-    image: { on: false, item: null, pose: 0 },
+    images: [],
+    pose: 0,
 
     heroBody: '이 섹션에서 다룰 내용을\n짧게 소개하는 본문입니다.',
     quote: {
@@ -103,9 +104,4 @@ function defaultHeading(template: BodyTemplate): string {
     case 'GRID_HERO': return '네 가지 순간';
     default: return '헤딩';
   }
-}
-
-// 캐릭터 이미지 슬롯용 헬퍼 (표지 캐릭터와 동일 규격 재사용)
-export function newBodyImageItem(src: string, type: 'image' | 'video' = 'image'): ImageItem {
-  return createImageItem(src, type);
 }

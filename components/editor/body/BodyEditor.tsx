@@ -5,7 +5,9 @@ import {
   SLOWQUICK_9_POSES, Publisher,
 } from '@/lib/tokens';
 import type { BodySlide } from '@/lib/state/bodySlide';
-import { TextField, TextareaField, SelectField, CheckboxField, ImageField } from '../Fields';
+import type { ImageItem } from '@/lib/state/useCarouselDraft';
+import { TextField, TextareaField, SelectField, CheckboxField } from '../Fields';
+import { MultiImageEditor } from '../MultiImageEditor';
 
 const COLOR_OPTIONS = PILL_COLORS.map((c) => ({ value: c.value, label: c.label }));
 
@@ -22,14 +24,16 @@ export function BodyEditor({
   slide,
   publisher,
   updateBody,
-  setBodyImage,
-  clearBodyImage,
+  addBodyImage,
+  updateBodyImage,
+  removeBodyImage,
 }: {
   slide: BodySlide;
   publisher: Publisher;
   updateBody: (id: string, patch: Partial<BodySlide>) => void;
-  setBodyImage: (id: string, src: string) => void;
-  clearBodyImage: (id: string) => void;
+  addBodyImage: (id: string, src: string, type: 'image' | 'video', aspect: number) => void;
+  updateBodyImage: (id: string, imgId: string, patch: Partial<ImageItem>) => void;
+  removeBodyImage: (id: string, imgId: string) => void;
 }) {
   const set = (patch: Partial<BodySlide>) => updateBody(slide.id, patch);
 
@@ -78,24 +82,23 @@ export function BodyEditor({
         )}
       </Section>
 
-      <Section title="이미지 슬롯">
-        <CheckboxField label="이미지 사용" checked={slide.image.on} onChange={(v) => set({ image: { ...slide.image, on: v } })} />
-        {slide.image.on && (
-          <>
-            <ImageField
-              label="이미지/캐릭터 업로드"
-              value={slide.image.item?.src ?? null}
-              onChange={(v) => (v ? setBodyImage(slide.id, v) : clearBodyImage(slide.id))}
-            />
-            {publisher === '슬로우퀵' && (
-              <SelectField
-                label="🧽 슬로우퀵 9포즈 (프롬프트용)"
-                value={String(slide.image.pose)}
-                onChange={(v) => set({ image: { ...slide.image, pose: Number(v) } })}
-                options={SLOWQUICK_9_POSES.map((p, i) => ({ value: String(i), label: p.label }))}
-              />
-            )}
-          </>
+      <Section title="이미지 / 영상 슬롯">
+        <MultiImageEditor
+          images={slide.images}
+          onAdd={(src, type, aspect) => addBodyImage(slide.id, src, type, aspect)}
+          onUpdate={(imgId, patch) => updateBodyImage(slide.id, imgId, patch)}
+          onRemove={(imgId) => removeBodyImage(slide.id, imgId)}
+        />
+        {slide.template === 'SIDE_PROFILE' && (
+          <div style={{ fontSize: 11, color: '#6b7280', marginTop: 6 }}>💡 첫 번째 이미지는 우측 슬롯에 표시됩니다.</div>
+        )}
+        {publisher === '슬로우퀵' && (
+          <SelectField
+            label="🧽 슬로우퀵 9포즈 (프롬프트용)"
+            value={String(slide.pose)}
+            onChange={(v) => set({ pose: Number(v) })}
+            options={SLOWQUICK_9_POSES.map((p, i) => ({ value: String(i), label: p.label }))}
+          />
         )}
       </Section>
 
