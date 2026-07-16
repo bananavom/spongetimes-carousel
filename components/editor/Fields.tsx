@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useRef } from 'react';
+import { ChangeEvent, useId, useRef } from 'react';
 
 /* ── TextField ─── */
 export function TextField({
@@ -174,6 +174,40 @@ export function SelectField({
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
+    </div>
+  );
+}
+
+/* ── ComboField (프리셋 제안 + 자유 텍스트 입력) ─── */
+export function ComboField({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: readonly string[];
+  placeholder?: string;
+}) {
+  const listId = useId();
+  return (
+    <div className="field-group">
+      <label className="field-label">{label}</label>
+      <input
+        className="field-input"
+        list={listId}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+      />
+      <datalist id={listId}>
+        {options.map((o) => (
+          <option key={o} value={o} />
+        ))}
+      </datalist>
     </div>
   );
 }

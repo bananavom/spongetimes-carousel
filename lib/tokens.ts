@@ -58,8 +58,7 @@ export const CTA_LABELS = [
 ] as const;
 
 // 발행자 (이름 + 캐릭터 프롬프트용 색상 정보, 04-character-prompt.md 기준)
-// 슬로우퀵: 본문(Body) OS 채널 발행자 (9포즈 캐릭터 시스템)
-export const PUBLISHERS = ['봄', '위버', '포비', '필리줄리', '슬로우퀵'] as const;
+export const PUBLISHERS = ['봄', '위버', '포비', '필리줄리'] as const;
 export type Publisher = typeof PUBLISHERS[number];
 
 export const PUBLISHER_META: Record<Publisher, { colorName: string; colorHex: string }> = {
@@ -67,22 +66,7 @@ export const PUBLISHER_META: Record<Publisher, { colorName: string; colorHex: st
   '위버': { colorName: 'burgundy red', colorHex: '#7A1F3D' },
   '포비': { colorName: 'pink', colorHex: '#F59AC1' },
   '필리줄리': { colorName: 'tiffany blue', colorHex: '#77DCD5' },
-  '슬로우퀵': { colorName: 'teal green', colorHex: '#3BB273' },
 };
-
-// 슬로우퀵 9포즈 캐릭터 시스템 (DESIGN-BODY.md — README 요약 기반)
-// #01 대표/손 흔들기 ~ #09 화이트보드. 라벨은 추후 원본 OS로 미세조정 가능.
-export const SLOWQUICK_9_POSES = [
-  { label: '#01 대표 · 손 흔들기', prompt: 'a friendly representative hero pose, waving hello with a big smile' },
-  { label: '#02 노트 필기', prompt: 'writing in a notebook, focused expression' },
-  { label: '#03 카메라 촬영', prompt: 'holding a camera, taking a photo of a scene' },
-  { label: '#04 생각 · 전구', prompt: 'a thinking pose with a light bulb floating above the head' },
-  { label: '#05 발표 · 손짓', prompt: 'presenting with an open-hand gesture, explaining' },
-  { label: '#06 노트북 작업', prompt: 'typing on a laptop, working diligently' },
-  { label: '#07 하트 · 응원', prompt: 'making a heart with both hands, cheering warmly' },
-  { label: '#08 박수', prompt: 'clapping hands with an excited, joyful expression' },
-  { label: '#09 화이트보드', prompt: 'pointing at a whiteboard, explaining an idea' },
-] as const;
 
 // 본문(Body) 템플릿 6종 (DESIGN-BODY.md §2 — README 요약 기반)
 export const BODY_TEMPLATES = [
