@@ -15,6 +15,7 @@ export function BodySlideRenderer({
   editable = false,
   onImageUpdate,
   containerScale,
+  highlightColor,
 }: {
   slide: BodySlide;
   index: number; // 1-based 본문 번호
@@ -22,6 +23,7 @@ export function BodySlideRenderer({
   editable?: boolean;
   onImageUpdate?: (imgId: string, patch: Partial<ImageItem>) => void;
   containerScale?: number;
+  highlightColor?: string;
 }) {
   // SIDE_PROFILE 은 이미지를 자체 슬롯에 배치하므로 Host 자유 이미지 슬롯을 끔
   const skipImageSlot = slide.template === 'SIDE_PROFILE';
@@ -37,7 +39,7 @@ export function BodySlideRenderer({
       skipImageSlot={skipImageSlot}
     >
       {slide.template === 'HERO' && <BodyHeroContent slide={slide} />}
-      {slide.template === 'QUOTE' && <BodyQuoteContent slide={slide} />}
+      {slide.template === 'QUOTE' && <BodyQuoteContent slide={slide} highlightColor={highlightColor} />}
       {slide.template === 'QUOTE_MULTI' && <BodyQuoteMultiContent slide={slide} />}
       {slide.template === 'FLOW' && <BodyFlowContent slide={slide} />}
       {slide.template === 'SIDE_PROFILE' && <BodySideProfileContent slide={slide} />}

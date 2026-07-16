@@ -3,7 +3,7 @@ import { Fragment, ReactNode } from 'react';
 
 // 오렌지 형광펜: 강조어 뒤에 absolute 색 막대를 깔아 하이라이트.
 // 막대 크기는 fontSize에 비례해 표지/CTA 어디서든 자연스럽게 스케일.
-function Mark({ children, fontSize }: { children: ReactNode; fontSize: number }) {
+function Mark({ children, fontSize, color }: { children: ReactNode; fontSize: number; color: string }) {
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}>
       <span
@@ -14,7 +14,7 @@ function Mark({ children, fontSize }: { children: ReactNode; fontSize: number })
           right: -fontSize * 0.06,
           bottom: fontSize * 0.08,
           height: fontSize * 0.36,
-          background: COLORS.highlighter,
+          background: color,
           borderRadius: 4,
           zIndex: 0,
         }}
@@ -24,7 +24,7 @@ function Mark({ children, fontSize }: { children: ReactNode; fontSize: number })
   );
 }
 
-function renderLine(line: string, highlight: string, fontSize: number): ReactNode {
+function renderLine(line: string, highlight: string, fontSize: number, color: string): ReactNode {
   if (!highlight || !line.includes(highlight)) return line || ' ';
   const idx = line.indexOf(highlight);
   const before = line.slice(0, idx);
@@ -32,7 +32,7 @@ function renderLine(line: string, highlight: string, fontSize: number): ReactNod
   return (
     <>
       {before}
-      <Mark fontSize={fontSize}>{highlight}</Mark>
+      <Mark fontSize={fontSize} color={color}>{highlight}</Mark>
       {after}
     </>
   );
@@ -46,16 +46,18 @@ export function Highlighted({
   text,
   highlight,
   fontSize,
+  color = COLORS.highlighter,
 }: {
   text: string;
   highlight: string;
   fontSize: number;
+  color?: string;
 }) {
   const lines = text.split('\n');
   return (
     <>
       {lines.map((line, i) => (
-        <div key={i}>{renderLine(line, highlight, fontSize)}</div>
+        <div key={i}>{renderLine(line, highlight, fontSize, color)}</div>
       ))}
     </>
   );

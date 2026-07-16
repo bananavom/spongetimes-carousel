@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useCarouselDraft, ImageItem, createImageItem } from '@/lib/state/useCarouselDraft';
 import type { BodySlide } from '@/lib/state/bodySlide';
-import { TOTAL_WEEKS, CONTENT_TYPES, PUBLISHERS, Publisher } from '@/lib/tokens';
+import { TOTAL_WEEKS, CONTENT_TYPES, PUBLISHERS, PUBLISHER_HIGHLIGHT, Publisher } from '@/lib/tokens';
 import { downloadSlide, downloadAllAsZip } from '@/lib/utils/exportImage';
 import { recordSlideToVideo } from '@/lib/utils/exportVideo';
 import { measureAspect } from '@/lib/utils/measureAspect';
@@ -119,7 +119,7 @@ function CarouselStudioInner() {
   function renderStaticSlide(entry: SlideEntry) {
     if (entry.kind === 'cover') return <CoverSlide draft={draft} />;
     if (entry.kind === 'cta') return <CtaSlide draft={draft} />;
-    return <BodySlideRenderer slide={entry.body} index={entry.bodyIndex} total={totalBody} />;
+    return <BodySlideRenderer slide={entry.body} index={entry.bodyIndex} total={totalBody} highlightColor={PUBLISHER_HIGHLIGHT[draft.publisher]} />;
   }
 
   function renderEditableSlide(entry: SlideEntry) {
@@ -135,6 +135,7 @@ function CarouselStudioInner() {
         editable
         onImageUpdate={(imgId, patch) => updateBodyImage(entry.body.id, imgId, patch)}
         containerScale={PREVIEW_SCALE}
+        highlightColor={PUBLISHER_HIGHLIGHT[draft.publisher]}
       />
     );
   }

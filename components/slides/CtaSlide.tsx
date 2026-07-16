@@ -1,4 +1,4 @@
-import { COLORS, FONT_FAMILY, RADIUS, px } from '@/lib/tokens';
+import { COLORS, FONT_FAMILY, RADIUS, px, PUBLISHER_HIGHLIGHT } from '@/lib/tokens';
 import type { CarouselDraft } from '@/lib/state/useCarouselDraft';
 import { Highlighted } from '@/lib/utils/Highlighted';
 
@@ -72,7 +72,7 @@ export function CtaSlide({ draft }: { draft: CarouselDraft }) {
             paddingTop: px(6),
           }}
         >
-          <Highlighted text={draft.cta_question} highlight={draft.cta_questionHighlight} fontSize={px(20)} />
+          <Highlighted text={draft.cta_question} highlight={draft.cta_questionHighlight} fontSize={px(20)} color={PUBLISHER_HIGHLIGHT[draft.publisher]} />
         </div>
       </div>
 
