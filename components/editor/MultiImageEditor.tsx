@@ -145,7 +145,7 @@ function ImageCard({
         <div className="image-card-body">
           <RangeField label="X 위치" value={image.x} onChange={(v) => onUpdate({ x: v })} min={0} max={1080} />
           <RangeField label="Y 위치" value={image.y} onChange={(v) => onUpdate({ y: v })} min={0} max={1350} />
-          <RangeField label="크기(너비)" value={image.size} onChange={(v) => onUpdate({ size: v })} min={50} max={1000} step={10} />
+          <RangeField label="크기(너비)" value={image.size} onChange={(v) => onUpdate({ size: v })} min={50} max={1300} step={10} />
           <div style={{ fontSize: 12, color: '#6b7280', padding: 8, background: '#f9fafb', borderRadius: 4 }}>
             📐 비율 자동 유지 (원본 {image.aspect >= 1 ? '가로형' : '세로형'}). 미리보기에서 모서리 드래그로도 조절돼요.
           </div>
