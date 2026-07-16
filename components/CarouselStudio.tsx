@@ -10,7 +10,7 @@ import { measureAspect } from '@/lib/utils/measureAspect';
 import { SelectionProvider, useSelection } from '@/lib/state/SelectionContext';
 import { generateCharacterPrompt } from '@/lib/character/prompt';
 
-import { TextField, TextareaField, NumberField, SelectField, ComboField } from './editor/Fields';
+import { TextField, TextareaField, NumberField, SelectField, ComboField, CheckboxField, ImageField } from './editor/Fields';
 import { MultiImageEditor } from './editor/MultiImageEditor';
 import { BodyEditor } from './editor/body/BodyEditor';
 import { BodyListManager } from './editor/body/BodyListManager';
@@ -166,6 +166,20 @@ function CarouselStudioInner() {
           <TextField label="🖍️ 질문 형광펜 강조" value={draft.cta_questionHighlight} onChange={(v) => update('cta_questionHighlight', v)} placeholder="질문 안의 강조 단어" />
           <TextareaField label="발행자 자유 멘트 (캐릭터 우측, 2~3줄)" value={draft.cta_message} onChange={(v) => update('cta_message', v)} rows={3} />
           <CtaCharacterField value={draft.cta_character} onChange={(v) => update('cta_character', v)} />
+
+          <div style={{ borderTop: '1px solid #eee', paddingTop: 12, marginTop: 12 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 4 }}>팔로우 카드</div>
+            <div style={{ fontSize: 11, color: '#9ca3af', marginBottom: 8 }}>스폰지클럽 카드는 기본 로고가 적용돼요. 변경은 코드 수정 필요.</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#374151', marginBottom: 8 }}>보조 팔로우 카드 (개인 계정)</div>
+            <CheckboxField label="보조 팔로우 카드 표시" checked={draft.cta_subFollow.on} onChange={(v) => update('cta_subFollow', { ...draft.cta_subFollow, on: v })} />
+            {draft.cta_subFollow.on && (
+              <>
+                <TextField label="이름" value={draft.cta_subFollow.name} onChange={(v) => update('cta_subFollow', { ...draft.cta_subFollow, name: v })} />
+                <TextField label="핸들" value={draft.cta_subFollow.handle} onChange={(v) => update('cta_subFollow', { ...draft.cta_subFollow, handle: v })} placeholder="@handle" />
+                <ImageField label="프로필 이미지" value={draft.cta_subFollow.image || null} onChange={(v) => update('cta_subFollow', { ...draft.cta_subFollow, image: v ?? '' })} />
+              </>
+            )}
+          </div>
         </>
       );
     }

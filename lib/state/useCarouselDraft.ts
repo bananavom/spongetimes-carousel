@@ -51,6 +51,9 @@ const DEFAULT_DRAFT = {
   cta_message: '봄이 던지는 질문이에요 ✨\n댓글로 이야기 들려주세요',
   cta_character: null as ImageItem | null, // 고정 슬롯: 이미지/영상 택1
 
+  // 보조 팔로우 카드 (발행자 개인 계정) — 메인 @spongeclub 카드 아래에 추가
+  cta_subFollow: { on: false, name: '봄', handle: '@handle', image: '' as string },
+
   // 본문 슬라이드 (표지 → 본문 1..N → CTA)
   bodySlides: [] as BodySlide[],
 };

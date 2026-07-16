@@ -115,49 +115,85 @@ export function CtaSlide({ draft }: { draft: CarouselDraft }) {
         </div>
       </div>
 
-      {/* 4. 다크네이비 팔로우 카드 */}
-      <div
-        style={{
-          marginTop: 'auto',
-          background: COLORS.cardDark,
-          borderRadius: RADIUS.follow,
-          padding: `${px(12)}px ${px(14)}px`,
-          display: 'flex',
-          alignItems: 'center',
-          gap: px(10),
-        }}
-      >
-        <div
-          style={{
-            width: px(32),
-            height: px(32),
-            background: COLORS.cardYellow,
-            borderRadius: RADIUS.smallCard,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: px(14),
-            flexShrink: 0,
-          }}
-        >
-          📰
+      {/* 4. 다크네이비 팔로우 카드 (메인 + 선택적 보조 카드) */}
+      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: px(10) }}>
+        {/* 메인: @spongeclub */}
+        <div style={followCardStyle}>
+          <div
+            style={{
+              width: px(32),
+              height: px(32),
+              background: COLORS.cardYellow,
+              borderRadius: RADIUS.smallCard,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: px(14),
+              flexShrink: 0,
+            }}
+          >
+            📰
+          </div>
+          <div style={{ flex: 1, fontSize: px(13), fontWeight: 700, color: COLORS.textOnDark }}>
+            @spongeclub
+          </div>
+          <div style={followBtnStyle}>+ 팔로우</div>
         </div>
-        <div style={{ flex: 1, fontSize: px(13), fontWeight: 700, color: COLORS.textOnDark }}>
-          @spongeclub
-        </div>
-        <div
-          style={{
-            background: COLORS.cardYellow,
-            color: COLORS.textPrimary,
-            fontSize: px(11),
-            fontWeight: 700,
-            padding: `${px(4)}px ${px(12)}px`,
-            borderRadius: RADIUS.pill,
-          }}
-        >
-          + 팔로우
-        </div>
+
+        {/* 보조: 발행자 개인 계정 */}
+        {draft.cta_subFollow.on && (
+          <div style={followCardStyle}>
+            <div
+              style={{
+                width: px(34),
+                height: px(34),
+                background: COLORS.cardYellow,
+                borderRadius: '50%',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: px(16),
+                flexShrink: 0,
+              }}
+            >
+              {draft.cta_subFollow.image ? (
+                <img src={draft.cta_subFollow.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                '👤'
+              )}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: px(13), fontWeight: 700, color: COLORS.textOnDark, lineHeight: 1.2 }}>
+                {draft.cta_subFollow.name}
+              </div>
+              <div style={{ fontSize: px(10), fontWeight: 500, color: 'rgba(255,255,255,0.5)', lineHeight: 1.3 }}>
+                {draft.cta_subFollow.handle}
+              </div>
+            </div>
+            <div style={followBtnStyle}>+ 팔로우</div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
+const followCardStyle: React.CSSProperties = {
+  background: COLORS.cardDark,
+  borderRadius: RADIUS.follow,
+  padding: `${px(12)}px ${px(14)}px`,
+  display: 'flex',
+  alignItems: 'center',
+  gap: px(10),
+};
+
+const followBtnStyle: React.CSSProperties = {
+  background: COLORS.cardYellow,
+  color: COLORS.textPrimary,
+  fontSize: px(11),
+  fontWeight: 700,
+  padding: `${px(4)}px ${px(12)}px`,
+  borderRadius: RADIUS.pill,
+  flexShrink: 0,
+};
