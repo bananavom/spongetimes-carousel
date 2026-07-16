@@ -68,6 +68,14 @@ export const PUBLISHER_META: Record<Publisher, { colorName: string; colorHex: st
   '필리줄리': { colorName: 'tiffany blue', colorHex: '#77DCD5' },
 };
 
+// 발행자별 형광펜(하이라이트) 컬러 — 사용자 지정
+export const PUBLISHER_HIGHLIGHT: Record<Publisher, string> = {
+  '봄': '#8ED6F6',
+  '위버': '#D77A8E',
+  '포비': '#FFB6D6',
+  '필리줄리': '#54D3C6',
+};
+
 // 본문(Body) 템플릿 6종 (DESIGN-BODY.md §2 — README 요약 기반)
 export const BODY_TEMPLATES = [
   { value: 'HERO',        label: 'HERO · 미션 진입/섹션 헤더' },

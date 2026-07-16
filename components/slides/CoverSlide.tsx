@@ -1,4 +1,4 @@
-import { COLORS, FONT_FAMILY, RADIUS, px } from '@/lib/tokens';
+import { COLORS, FONT_FAMILY, RADIUS, px, PUBLISHER_HIGHLIGHT } from '@/lib/tokens';
 import type { CarouselDraft, ImageItem } from '@/lib/state/useCarouselDraft';
 import { MultiImages, DraggableMultiImages } from './AnimatedImage';
 import { Highlighted } from '@/lib/utils/Highlighted';
@@ -93,7 +93,7 @@ export function CoverSlide({
           zIndex: 1,
         }}
       >
-        <Highlighted text={draft.cover_mainTitle} highlight={draft.cover_highlight} fontSize={px(40)} />
+        <Highlighted text={draft.cover_mainTitle} highlight={draft.cover_highlight} fontSize={px(40)} color={PUBLISHER_HIGHLIGHT[draft.publisher]} />
       </div>
 
       {/* 캐릭터 (우하단, 업로드) */}
