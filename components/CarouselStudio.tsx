@@ -146,6 +146,9 @@ function CarouselStudioInner() {
         <>
           <TextareaField label="메인 타이틀 (줄바꿈 = 실제 줄바꿈)" value={draft.cover_mainTitle} onChange={(v) => update('cover_mainTitle', v)} rows={3} />
           <TextField label="🖍️ 형광펜 강조 단어" value={draft.cover_highlight} onChange={(v) => update('cover_highlight', v)} placeholder="타이틀 안의 강조할 단어" />
+          <TextareaField label="부제 (서브 문구, 선택)" value={draft.cover_subText} onChange={(v) => update('cover_subText', v)} rows={2} placeholder="타이틀 아래 한두 줄 (비우면 표시 안 됨)" />
+          <TextField label="매거진명 (헤더 좌측)" value={draft.magazineName} onChange={(v) => update('magazineName', v)} placeholder="SPONGE TIMES" />
+          <TextField label="계정 핸들 (푸터·CTA 카드 공용)" value={draft.accountHandle} onChange={(v) => update('accountHandle', v)} placeholder="@spongeclub" />
           <div style={{ fontSize: 12, color: '#6b7280', padding: 8, background: '#f9fafb', borderRadius: 4, marginBottom: 12 }}>
             🧸 캐릭터/미디어는 미리보기에서 클릭 후 드래그/리사이즈로 배치하세요 (우하단 권장)
           </div>

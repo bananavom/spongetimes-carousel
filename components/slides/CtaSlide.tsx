@@ -135,7 +135,7 @@ export function CtaSlide({ draft }: { draft: CarouselDraft }) {
             📰
           </div>
           <div style={{ flex: 1, fontSize: px(13), fontWeight: 700, color: COLORS.textOnDark }}>
-            @spongeclub
+            {draft.accountHandle}
           </div>
           <div style={followBtnStyle}>+ 팔로우</div>
         </div>

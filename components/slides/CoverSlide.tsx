@@ -56,7 +56,7 @@ export function CoverSlide({
           zIndex: 1,
         }}
       >
-        <span style={{ letterSpacing: '0.15em' }}>SPONGE TIMES</span>
+        <span style={{ letterSpacing: '0.15em' }}>{draft.magazineName}</span>
         <span style={{ letterSpacing: '0.05em' }}>VOL.{volume} / {draft.year}</span>
       </div>
 
@@ -78,22 +78,25 @@ export function CoverSlide({
         </span>
       </div>
 
-      {/* 메인 타이틀 (좌측 정렬 + 오렌지 형광펜) */}
+      {/* 메인 타이틀 (좌측 정렬 + 형광펜) + 부제 */}
       <div
         style={{
           position: 'absolute',
           top: Math.round(1350 * 0.30),
           left: PADX,
           right: PADX,
-          fontSize: px(40),
-          fontWeight: 700,
-          lineHeight: 1.15,
-          letterSpacing: '-0.025em',
           textAlign: 'left',
           zIndex: 1,
         }}
       >
-        <Highlighted text={draft.cover_mainTitle} highlight={draft.cover_highlight} fontSize={px(40)} color={PUBLISHER_HIGHLIGHT[draft.publisher]} />
+        <div style={{ fontSize: px(40), fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.025em' }}>
+          <Highlighted text={draft.cover_mainTitle} highlight={draft.cover_highlight} fontSize={px(40)} color={PUBLISHER_HIGHLIGHT[draft.publisher]} />
+        </div>
+        {draft.cover_subText && (
+          <div style={{ marginTop: px(14), fontSize: px(17), fontWeight: 500, lineHeight: 1.45, color: COLORS.mutedHigh, whiteSpace: 'pre-line' }}>
+            {draft.cover_subText}
+          </div>
+        )}
       </div>
 
       {/* 캐릭터 (우하단, 업로드) */}
@@ -119,7 +122,7 @@ export function CoverSlide({
           zIndex: 1,
         }}
       >
-        <span>@spongeclub</span>
+        <span>{draft.accountHandle}</span>
         <span>by {draft.publisher}</span>
       </div>
     </div>

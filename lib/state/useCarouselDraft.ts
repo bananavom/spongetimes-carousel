@@ -39,9 +39,14 @@ const DEFAULT_DRAFT = {
   contentType: '인사이트' as string, // 프리셋 또는 자유 입력
   publisher: '봄' as Publisher,
 
+  // 브랜드 텍스트 (표지 헤더 / 표지 푸터·CTA 팔로우 카드 공용)
+  magazineName: 'SPONGE TIMES',
+  accountHandle: '@spongeclub',
+
   // 표지 (Cover) — 01-cover.md
   cover_mainTitle: '노션 캘린더\n자동화 스킬\n직접 써봤습니다',
   cover_highlight: '자동화 스킬',
+  cover_subText: '', // 타이틀 아래 부제(선택)
   cover_images: [] as ImageItem[],
 
   // CTA — 03-cta.md
