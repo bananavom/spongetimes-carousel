@@ -2,7 +2,6 @@
 
 import {
   BODY_TEMPLATES, CIRCLE_POSITIONS, CIRCLE_SIZES, CIRCLE_SHAPES, PILL_COLORS,
-  SLOWQUICK_9_POSES, Publisher,
 } from '@/lib/tokens';
 import type { BodySlide } from '@/lib/state/bodySlide';
 import type { ImageItem } from '@/lib/state/useCarouselDraft';
@@ -22,14 +21,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export function BodyEditor({
   slide,
-  publisher,
   updateBody,
   addBodyImage,
   updateBodyImage,
   removeBodyImage,
 }: {
   slide: BodySlide;
-  publisher: Publisher;
   updateBody: (id: string, patch: Partial<BodySlide>) => void;
   addBodyImage: (id: string, src: string, type: 'image' | 'video', aspect: number) => void;
   updateBodyImage: (id: string, imgId: string, patch: Partial<ImageItem>) => void;
@@ -91,14 +88,6 @@ export function BodyEditor({
         />
         {slide.template === 'SIDE_PROFILE' && (
           <div style={{ fontSize: 11, color: '#6b7280', marginTop: 6 }}>💡 첫 번째 이미지는 우측 슬롯에 표시됩니다.</div>
-        )}
-        {publisher === '슬로우퀵' && (
-          <SelectField
-            label="🧽 슬로우퀵 9포즈 (프롬프트용)"
-            value={String(slide.pose)}
-            onChange={(v) => set({ pose: Number(v) })}
-            options={SLOWQUICK_9_POSES.map((p, i) => ({ value: String(i), label: p.label }))}
-          />
         )}
       </Section>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import type { AnimationType, ContentType, Publisher, BodyTemplate } from '@/lib/tokens';
+import type { AnimationType, Publisher, BodyTemplate } from '@/lib/tokens';
 import { createBodySlide, type BodySlide } from '@/lib/state/bodySlide';
 
 // 미디어 아이템 타입 (캐릭터 이미지 또는 영상)
@@ -36,7 +36,7 @@ const DEFAULT_DRAFT = {
   week: 1,
   year: 2026,
   volume: 1,
-  contentType: '인사이트' as ContentType,
+  contentType: '인사이트' as string, // 프리셋 또는 자유 입력
   publisher: '봄' as Publisher,
 
   // 표지 (Cover) — 01-cover.md

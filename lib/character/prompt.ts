@@ -1,7 +1,7 @@
 // 캐릭터 AI 프롬프트 생성 (04-character-prompt.md 기반)
 // 발행자/콘텐츠 유형/슬라이드 타입 → 외부 AI 도구(Midjourney·DALL-E 등)용 영문 프롬프트
 
-import { PUBLISHER_META, Publisher, ContentType, SLOWQUICK_9_POSES } from '@/lib/tokens';
+import { PUBLISHER_META, Publisher, ContentType } from '@/lib/tokens';
 
 type SlideType = 'cover' | 'cta' | 'body';
 
@@ -52,14 +52,12 @@ export function generateCharacterPrompt({
   slideType,
   seed = 0,
   customPose = '',
-  poseIndex,
 }: {
   publisher: Publisher;
-  contentType: ContentType;
+  contentType: string; // 프리셋 또는 사용자 자유 입력
   slideType: SlideType;
   seed?: number;
   customPose?: string;
-  poseIndex?: number; // 슬로우퀵 9포즈 인덱스 (0~8), 지정 시 우선
 }): string {
   const colorName = PUBLISHER_META[publisher].colorName;
 
@@ -70,17 +68,16 @@ export function generateCharacterPrompt({
     `sparkle. Simple pixel smile face (two dot eyes, curve mouth). 32px tall, retro ` +
     `game style.`;
 
+  // 자유 입력 콘텐츠 유형은 포즈 풀에 없을 수 있어 fallback 처리
+  const contentPoses = CONTENT_POSES[contentType as ContentType] ?? CONTENT_POSES['현장 기록'];
+
   let pose: string;
   if (customPose.trim()) {
     pose = customPose.trim();
-  } else if (publisher === '슬로우퀵' && poseIndex != null && SLOWQUICK_9_POSES[poseIndex]) {
-    pose = SLOWQUICK_9_POSES[poseIndex].prompt;
   } else if (slideType === 'cta') {
     pose = pick(CTA_POSES, seed);
-  } else if (slideType === 'body') {
-    pose = pick(CONTENT_POSES[contentType], seed);
   } else {
-    pose = pick(CONTENT_POSES[contentType], seed);
+    pose = pick(contentPoses, seed);
   }
 
   return `${base}\n\n${pose}.\n\nPlain transparent background. Centered composition.`;

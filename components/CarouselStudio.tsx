@@ -3,14 +3,14 @@
 import { useRef, useState } from 'react';
 import { useCarouselDraft, ImageItem, createImageItem } from '@/lib/state/useCarouselDraft';
 import type { BodySlide } from '@/lib/state/bodySlide';
-import { TOTAL_WEEKS, CONTENT_TYPES, PUBLISHERS, ContentType, Publisher } from '@/lib/tokens';
+import { TOTAL_WEEKS, CONTENT_TYPES, PUBLISHERS, Publisher } from '@/lib/tokens';
 import { downloadSlide, downloadAllAsZip } from '@/lib/utils/exportImage';
 import { recordSlideToVideo } from '@/lib/utils/exportVideo';
 import { measureAspect } from '@/lib/utils/measureAspect';
 import { SelectionProvider, useSelection } from '@/lib/state/SelectionContext';
 import { generateCharacterPrompt } from '@/lib/character/prompt';
 
-import { TextField, TextareaField, NumberField, SelectField } from './editor/Fields';
+import { TextField, TextareaField, NumberField, SelectField, ComboField } from './editor/Fields';
 import { MultiImageEditor } from './editor/MultiImageEditor';
 import { BodyEditor } from './editor/body/BodyEditor';
 import { BodyListManager } from './editor/body/BodyListManager';
@@ -20,7 +20,6 @@ import { BodySlideRenderer } from './slides/body/BodySlideRenderer';
 
 const PREVIEW_SCALE = 0.37;
 
-const CONTENT_TYPE_OPTIONS = CONTENT_TYPES.map((t) => ({ value: t, label: t }));
 const PUBLISHER_OPTIONS = PUBLISHERS.map((p) => ({ value: p, label: p }));
 
 type SlideEntry =
@@ -172,7 +171,6 @@ function CarouselStudioInner() {
     return (
       <BodyEditor
         slide={activeEntry.body}
-        publisher={draft.publisher}
         updateBody={updateBody}
         addBodyImage={addBodyImage}
         updateBodyImage={updateBodyImage}
@@ -183,7 +181,6 @@ function CarouselStudioInner() {
 
   // 캐릭터 프롬프트 패널 파라미터
   const promptSlideType = activeEntry.kind === 'cover' ? 'cover' : activeEntry.kind === 'cta' ? 'cta' : 'body';
-  const promptPoseIndex = activeEntry.kind === 'body' && draft.publisher === '슬로우퀵' ? activeEntry.body.pose : undefined;
 
   return (
     <div className="studio-layout">
@@ -214,7 +211,7 @@ function CarouselStudioInner() {
             <NumberField label="Vol." value={draft.volume} onChange={(v) => update('volume', v)} min={1} />
             <NumberField label="Year" value={draft.year} onChange={(v) => update('year', v)} min={2024} max={2100} />
           </div>
-          <SelectField label="콘텐츠 유형" value={draft.contentType} onChange={(v) => update('contentType', v as ContentType)} options={CONTENT_TYPE_OPTIONS} />
+          <ComboField label="콘텐츠 유형 (직접 입력 가능)" value={draft.contentType} onChange={(v) => update('contentType', v)} options={CONTENT_TYPES} placeholder="예: 인사이트, 현장 기록, 슬랙 모멘트…" />
           <SelectField label="발행자" value={draft.publisher} onChange={(v) => update('publisher', v as Publisher)} options={PUBLISHER_OPTIONS} />
         </div>
 
@@ -246,7 +243,6 @@ function CarouselStudioInner() {
             contentType={draft.contentType}
             slideType={promptSlideType}
             seed={draft.week}
-            poseIndex={promptPoseIndex}
           />
         </div>
       </div>
@@ -271,16 +267,15 @@ function CarouselStudioInner() {
 
 /* ── 캐릭터 AI 프롬프트 생성 패널 ── */
 function CharacterPromptPanel({
-  publisher, contentType, slideType, seed, poseIndex,
+  publisher, contentType, slideType, seed,
 }: {
   publisher: Publisher;
-  contentType: ContentType;
+  contentType: string;
   slideType: 'cover' | 'cta' | 'body';
   seed: number;
-  poseIndex?: number;
 }) {
   const [copied, setCopied] = useState(false);
-  const prompt = generateCharacterPrompt({ publisher, contentType, slideType, seed, poseIndex });
+  const prompt = generateCharacterPrompt({ publisher, contentType, slideType, seed });
 
   async function handleCopy() {
     try {
