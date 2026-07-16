@@ -150,6 +150,7 @@ export function DraggableBox({
         userSelect: 'none',
       }}
       onMouseDown={handleMouseDown}
+      onClick={(e) => e.stopPropagation()}
     >
       {children}
 
