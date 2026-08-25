@@ -12,8 +12,8 @@
     "_comment": "탭 4개: README / hypotheses / posts_metrics / verdicts. ID가 무효해지면 이름으로 검색하거나 CSV로 폴백한다."
   },
   "weekly_variables": {
-    "W1": "배경 재질 — 단색 vs 실사·스크린샷",
-    "W2": "첫 장 후킹 — 숫자 vs 질문 vs 결과 공개",
+    "W1": "첫 장 후킹 — 숫자 vs 질문 vs 결과 공개 (원래 W2 계획을 앞당김)",
+    "W2": "배경 재질 — 단색 vs 실사·스크린샷 (원래 W1 계획과 교체)",
     "W3": "검증된 조합 위에서 다음 변수 (미정)"
   },
   "fixed_elements": [
