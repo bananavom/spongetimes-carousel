@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# skills packaging (claude.ai 업로드용 zip은 커밋하지 않음)
+skills/*.zip

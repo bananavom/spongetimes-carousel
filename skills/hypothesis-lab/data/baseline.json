@@ -1,0 +1,61 @@
+{
+  "updated_at": "2026-08-25",
+  "quality": "seeded",
+  "follower_count": 500,
+  "window": "recent_4w",
+  "formats": {
+    "carousel": {
+      "n_posts": 0,
+      "avg_reach": null,
+      "avg_views": null,
+      "save_rate": null,
+      "share_rate": null,
+      "follow_conv_rate": null,
+      "nonfollower_reach_pct": 11.8
+    },
+    "reel": {
+      "n_posts": 4,
+      "avg_reach": 1090,
+      "avg_views": 1572,
+      "save_rate": 0.0016,
+      "share_rate": 0.0009,
+      "follow_conv_rate": null,
+      "nonfollower_reach_pct": 80.5
+    }
+  },
+  "season2_seed": {
+    "follower_growth": "360 → 440 (6주, 주당 약 13명)",
+    "follower_reach_pct": 88.2,
+    "representative_post": {
+      "saves": 1,
+      "shares": 0
+    },
+    "note": "릴스 4건(크루 인터뷰) 스크린샷 시딩 완료(7d). 캐러셀은 미시딩 — 스크린샷 추가 필요. 비팔로워 % 는 조회수 기준 가중평균."
+  },
+  "history": [
+    {
+      "updated_at": "2026-08-25",
+      "quality": "rough",
+      "formats": {
+        "carousel": {
+          "n_posts": 0,
+          "avg_reach": null,
+          "avg_views": null,
+          "save_rate": null,
+          "share_rate": null,
+          "follow_conv_rate": null,
+          "nonfollower_reach_pct": 11.8
+        },
+        "reel": {
+          "n_posts": 0,
+          "avg_reach": null,
+          "avg_views": null,
+          "save_rate": null,
+          "share_rate": null,
+          "follow_conv_rate": null,
+          "nonfollower_reach_pct": null
+        }
+      }
+    }
+  ]
+}
