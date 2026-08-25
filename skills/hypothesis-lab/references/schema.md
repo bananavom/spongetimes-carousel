@@ -1,6 +1,6 @@
 # 데이터 스키마 — 시트 탭 = CSV = API 공통 계약
 
-세 개의 로그가 있고, Google Sheets의 탭과 `data/*.csv`는 **컬럼이 1:1로 동일**하다.
+네 개의 로그가 있고, Google Sheets의 탭과 `data/*.csv`는 **컬럼이 1:1로 동일**하다.
 미래에 Instagram Graph API 수집기를 붙여도 같은 컬럼으로 행만 append하면 된다(`source=api`).
 이 계약을 깨는 변경(컬럼 삭제·이름 변경)은 하지 마라. 컬럼 추가는 맨 끝에만 한다.
 
@@ -18,8 +18,10 @@
 | 가설 | `H-{시즌}{주차}-{일련2자리}` | `H-S3W1-01` |
 | 포스트 | `P-{시즌}{주차}-{일련2자리}` | `P-S3W1-02` |
 | 판정 | `V-{시즌}{주차}-{일련2자리}` | `V-S3W1-01` |
+| 레퍼런스 | `R-{YYYYMMDD}-{일련2자리}` | `R-20260826-01` |
 
-일련번호는 주차 안에서 1부터. 기존 로그를 읽어 다음 번호를 발급한다.
+일련번호는 주차(레퍼런스는 날짜) 안에서 1부터. 기존 로그를 읽어 다음 번호를 발급한다.
+레퍼런스만 날짜 기반인 이유: 주간 루프와 무관하게 상시로 쌓이기 때문이다.
 
 ## hypotheses (가설 로그)
 
@@ -117,6 +119,34 @@ CSV 헤더:
 
 ```
 verdict_id,hypothesis_id,verified_at,snapshot_used,experiment_posts,control_ref,metric,experiment_value,control_value,delta_pct,threshold,verdict,funnel_diagnosis,confounders_noted,learning,report_path,baseline_updated
+```
+
+## references (레퍼런스 로그)
+
+모드 ⓪이 쌓는 로그. 지금 가설에 쓰지 않는 것도 보관하며, 모드 ①이 매주 읽는다.
+
+| 컬럼 | 한국어 | 설명 |
+|---|---|---|
+| `ref_id` | 레퍼런스 ID | `R-20260826-01` |
+| `collected_at` | 수집 일시 | |
+| `source_type` | 전달 형태 | `image` / `video` / `link` |
+| `account` | 계정 | 예: @dot_pd_ |
+| `post_url` | 링크 | 있으면 기록 |
+| `format` | 포맷 | `carousel` / `reel` / `story` |
+| `summary` | 한 줄 설명 | 무슨 콘텐츠인가 |
+| `fixed_elements` | 고정 요소 | 매 편 똑같은 것 |
+| `variable_elements` | 변수 요소 | 편마다 바뀌는 것 |
+| `hook_elements` | 후킹 요소 | 손이 멈춘 이유 (첫 3초 / 표지 문구) |
+| `visible_metrics` | 공개 지표 | 좋아요·댓글 등 보이는 값 (+계정 팔로워 수) |
+| `apply_point` | 적용 포인트 | "스폰지타임즈에 적용한다면?" 의 답 — 필수 |
+| `hypothesis_candidate` | 가설 후보 | 한 문장(지표 포함) 초안 |
+| `status` | 상태 | `보관` / `가설화됨` / `폐기` |
+| `linked_hypothesis_id` | 연결 가설 | 가설화 시 기입 |
+
+CSV 헤더:
+
+```
+ref_id,collected_at,source_type,account,post_url,format,summary,fixed_elements,variable_elements,hook_elements,visible_metrics,apply_point,hypothesis_candidate,status,linked_hypothesis_id
 ```
 
 ## baseline.json

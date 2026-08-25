@@ -13,6 +13,7 @@
 | `hypotheses` | 가설 로그 — 1행 = schema.md의 CSV 헤더 그대로 |
 | `posts_metrics` | 발행+지표 로그 — 동일 |
 | `verdicts` | 판정 로그 — 동일 |
+| `references` | 레퍼런스 로그(모드 ⓪) — 동일 |
 
 ### 시트 처음 만들기
 
