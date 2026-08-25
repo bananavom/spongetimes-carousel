@@ -35,12 +35,20 @@ SCHEMAS = {
         "funnel_diagnosis", "confounders_noted", "learning", "report_path",
         "baseline_updated",
     ],
+    "references.csv": [
+        "ref_id", "collected_at", "source_type", "account", "post_url",
+        "format", "summary", "fixed_elements", "variable_elements",
+        "hook_elements", "visible_metrics", "apply_point",
+        "hypothesis_candidate", "status", "linked_hypothesis_id",
+    ],
 }
 
 ID_PATTERNS = {
     "hypothesis_id": re.compile(r"^H-S\d+W\d+-\d{2}$"),
     "post_id": re.compile(r"^P-S\d+W\d+-\d{2}$"),
     "verdict_id": re.compile(r"^V-S\d+W\d+-\d{2}$"),
+    "ref_id": re.compile(r"^R-\d{8}-\d{2}$"),
+    "linked_hypothesis_id": re.compile(r"^H-S\d+W\d+-\d{2}$"),
 }
 
 NUMERIC_COLS = {
@@ -57,7 +65,9 @@ ENUMS = {
     "source": {"", "screenshot", "manual", "api"},
     "comparison_design": {"", "baseline", "paired", "prepost"},
     "verdict": {"지지", "지지(1회)", "기각", "판단불가"},
-    "status": {"", "대기", "발행됨", "검증완료"},
+    # status: hypotheses(대기/발행됨/검증완료) + references(보관/가설화됨/폐기) 공용 컬럼명
+    "status": {"", "대기", "발행됨", "검증완료", "보관", "가설화됨", "폐기"},
+    "source_type": {"", "image", "video", "link"},
     "baseline_updated": {"", "Y", "N"},
 }
 
@@ -131,7 +141,7 @@ def main(data_dir):
             print(f"  - {e}")
         return 1
     total = sum(len(r) for r in rows_by_file.values())
-    print(f"✅ 검증 통과 — 로그 3종 헤더 일치, 데이터 행 {total}개 무결.")
+    print(f"✅ 검증 통과 — 로그 {len(rows_by_file)}종 헤더 일치, 데이터 행 {total}개 무결.")
     return 0
 
 
