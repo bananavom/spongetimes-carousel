@@ -1,0 +1,27 @@
+{
+  "account_handle": "@spongeclub.ai",
+  "season": "S3",
+  "season_start": "2026-08-31",
+  "weeks_total": 6,
+  "timezone": "Asia/Seoul",
+  "goal": "팔로워 500 → 1,000명",
+  "sheet": {
+    "name": "스폰지타임즈 3기 가설검증 로그",
+    "sheet_id": "1NjsFpJzAjviK1RTwvxqqy57SvZdACLQfHPNSUdPdhsw",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1NjsFpJzAjviK1RTwvxqqy57SvZdACLQfHPNSUdPdhsw/edit",
+    "_comment": "탭 4개: README / hypotheses / posts_metrics / verdicts. ID가 무효해지면 이름으로 검색하거나 CSV로 폴백한다."
+  },
+  "weekly_variables": {
+    "W1": "배경 재질 — 단색 vs 실사·스크린샷",
+    "W2": "첫 장 후킹 — 숫자 vs 질문 vs 결과 공개",
+    "W3": "검증된 조합 위에서 다음 변수 (미정)"
+  },
+  "fixed_elements": [
+    "노랑 악센트 (형광펜·스티커)",
+    "첫 장 후크 문장 구조",
+    "계정 핸들·로고 위치",
+    "캐릭터 스티커"
+  ],
+  "baseline_window_weeks": 4,
+  "snapshot_points": ["24h", "7d"]
+}

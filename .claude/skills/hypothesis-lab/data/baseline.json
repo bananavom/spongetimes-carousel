@@ -1,0 +1,33 @@
+{
+  "updated_at": "2026-08-25",
+  "quality": "rough",
+  "follower_count": 500,
+  "window": "recent_4w",
+  "formats": {
+    "carousel": {
+      "n_posts": 0,
+      "avg_reach": null,
+      "avg_views": null,
+      "save_rate": null,
+      "share_rate": null,
+      "follow_conv_rate": null,
+      "nonfollower_reach_pct": 11.8
+    },
+    "reel": {
+      "n_posts": 0,
+      "avg_reach": null,
+      "avg_views": null,
+      "save_rate": null,
+      "share_rate": null,
+      "follow_conv_rate": null,
+      "nonfollower_reach_pct": null
+    }
+  },
+  "season2_seed": {
+    "follower_growth": "360 → 440 (6주, 주당 약 13명)",
+    "follower_reach_pct": 88.2,
+    "representative_post": { "saves": 1, "shares": 0 },
+    "note": "발표 자료 기준 일회성 집계. 포스트 단위 시딩(모드 ⑥) 전까지는 방향 참고용(quality: rough)."
+  },
+  "history": []
+}

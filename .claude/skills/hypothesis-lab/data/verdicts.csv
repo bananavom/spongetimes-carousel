@@ -1,0 +1,1 @@
+verdict_id,hypothesis_id,verified_at,snapshot_used,experiment_posts,control_ref,metric,experiment_value,control_value,delta_pct,threshold,verdict,funnel_diagnosis,confounders_noted,learning,report_path,baseline_updated
