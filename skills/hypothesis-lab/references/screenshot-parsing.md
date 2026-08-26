@@ -29,6 +29,12 @@
 | 팔로우 | Follows | `follows` |
 | 상호작용 / 참여한 계정 | Interactions / Accounts engaged | (참고용 — 개별 지표가 있으면 그쪽 우선) |
 | 재생 시간 / 평균 시청 시간 | Watch time / Avg watch time | `notes`에 기록 (릴스) |
+| 시청 유지율 그래프 | Retention / Audience retention | 모양을 `notes`에 한 줄로 (릴스) — 아래 참고 |
+
+**릴스는 유지율 그래프도 함께 캡처를 요청하라.** 그래프 모양이 훅·본문·CTA 중 어디서
+이탈했는지 알려주므로, 검증(모드 ⑤)의 진단 정확도가 크게 올라간다. `notes`에는
+"초반 급락", "중간 계단식 하락", "끝까지 50% 유지" 처럼 모양만 적으면 된다.
+판독표는 `analysis-guide.md`의 "릴스는 유지율 그래프로 실패 지점을 특정한다".
 
 주의:
 - 최신 UI는 `노출(impressions)` 대신 `조회(views)`를 상단에 보여준다. 화면에 있는 것만 기록하라.
