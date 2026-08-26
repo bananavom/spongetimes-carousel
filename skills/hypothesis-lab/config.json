@@ -7,9 +7,9 @@
   "goal": "팔로워 500 → 1,000명",
   "sheet": {
     "name": "스폰지타임즈 3기 가설검증 로그",
-    "sheet_id": "1NjsFpJzAjviK1RTwvxqqy57SvZdACLQfHPNSUdPdhsw",
-    "sheet_url": "https://docs.google.com/spreadsheets/d/1NjsFpJzAjviK1RTwvxqqy57SvZdACLQfHPNSUdPdhsw/edit",
-    "_comment": "탭 4개: README / hypotheses / posts_metrics / verdicts. ID가 무효해지면 이름으로 검색하거나 CSV로 폴백한다."
+    "sheet_id": "1R-ffPzvJGcguzAd2m7_bOF2wbCEEXeOA5JMS3zoXYmM",
+    "sheet_url": "https://docs.google.com/spreadsheets/d/1R-ffPzvJGcguzAd2m7_bOF2wbCEEXeOA5JMS3zoXYmM/edit",
+    "_comment": "탭 5개: README / hypotheses / posts_metrics / verdicts / references. ID가 무효해지면 이름으로 검색하거나 CSV로 폴백한다. (구버전 시트 1NjsFpJz...는 사용 중지)"
   },
   "weekly_variables": {
     "W1": "배경 재질 — 단색 vs 실사·스크린샷",
