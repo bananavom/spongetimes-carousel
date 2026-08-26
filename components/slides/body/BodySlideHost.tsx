@@ -43,6 +43,7 @@ export function BodySlideHost({
         overflow: 'hidden',
         fontFamily: FONT_FAMILY,
         color: COLORS.textPrimary,
+        wordBreak: 'keep-all', // 한국어 어절 단위 줄바꿈 (상속됨)
       }}
     >
       <YellowCircleDeco circle={slide.circle} />

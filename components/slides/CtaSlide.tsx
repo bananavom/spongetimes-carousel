@@ -16,6 +16,7 @@ export function CtaSlide({ draft }: { draft: CarouselDraft }) {
         overflow: 'hidden',
         fontFamily: FONT_FAMILY,
         color: COLORS.textPrimary,
+        wordBreak: 'keep-all', // 한국어 어절 단위 줄바꿈 (상속됨)
         padding: `${PADY}px ${PADX}px`,
         display: 'flex',
         flexDirection: 'column',
