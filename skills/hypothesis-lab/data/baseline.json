@@ -81,5 +81,42 @@
         }
       }
     }
-  ]
+  ],
+  "account_profile": {
+    "measured_at": "2026-08-26",
+    "source": "Snipit AI Analysis",
+    "followers": 500,
+    "following": 138,
+    "posts": 123,
+    "avg_likes": 13.85,
+    "avg_comments": 2.85,
+    "like_rate_pct": 2.77,
+    "comment_rate_pct": 0.57,
+    "comment_to_like_ratio": 0.21,
+    "top_post": {
+      "likes": 50,
+      "comments": 17,
+      "note": "커피 디자이너 8명→214명 사례"
+    },
+    "win_formula": "실명·직업 특정 인물 + 숫자화된 결과 + Before→After 변화 서사 (TOP3 전건 공통)",
+    "diagnosed_gaps": [
+      "절대 인게이지먼트 낮음(좋아요 14·댓글 3) — 공유 가능성 부족",
+      "게시물 123개 대비 팔로워 500 — 병목은 생산량이 아니라 도달·확산",
+      "캡션이 길고 복잡 — 핵심 메시지 선행(프론트로딩) 필요"
+    ]
+  },
+  "benchmarks": {
+    "@ourproject_chisang": {
+      "followers": 85451,
+      "posts": 124,
+      "avg_likes": 651.95,
+      "avg_comments": 641.1,
+      "like_rate_pct": 0.76,
+      "comment_rate_pct": 0.75,
+      "comment_to_like_ratio": 0.98,
+      "top_reach_multiple": 2.8,
+      "note": "규모 중립 지표는 댓글:좋아요 비율과 조회수/팔로워 배수. 좋아요율 절대 비교는 규모가 다르면 무의미."
+    }
+  },
+  "note_on_rates": "좋아요율은 계정 규모에 따라 기준선이 다르다(500명 2.77% vs 85K 0.76% — 둘 다 정상). 규모 중립 비교는 댓글:좋아요 비율, 조회수/팔로워 배수, 비팔로워 도달 비율로 한다."
 }
