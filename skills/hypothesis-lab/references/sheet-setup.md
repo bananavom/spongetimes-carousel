@@ -25,6 +25,30 @@
    (URL의 `/d/`와 `/edit` 사이 문자열이 ID다).
 5. 유닛 멤버 전원에게 편집 권한을 공유한다.
 
+## 시트 헤더는 한국어일 수 있다 — 계약은 "순서"다
+
+시트는 사람이 보는 창구라 헤더를 한국어로 바꿔도 된다. 대신 **컬럼 순서는 절대 바꾸지 마라.**
+헤더 이름이 아니라 순서가 CSV와 시트를 잇는 계약이다. 레포의 `data/*.csv`는 스크립트가
+읽으므로 **영문 컬럼명을 유지**한다.
+
+현재 `references` 탭의 헤더 (2026-08-26 사용자 변경):
+
+| 열 | 시트 헤더 | CSV 컬럼 |
+|---|---|---|
+| A~F | ref_id · collected_at · source_type · account · post_url · format | (동일) |
+| G | **요약** | `summary` |
+| H | **고정요소** | `fixed_elements` |
+| I | **변형요소** | `variable_elements` |
+| J | **후킹요소** | `hook_elements` |
+| K | visible_metrics | (동일) |
+| L | **적용 포인트** | `apply_point` |
+| M | **가설** | `hypothesis_candidate` |
+| N~O | status · linked_hypothesis_id | (동일) |
+
+시트를 읽을 때 헤더가 한국어여도 위 순서대로 매핑하면 된다. 다른 탭도 한국어로 바뀔 수
+있으니, **헤더 이름이 낯설면 이름이 아니라 위치로 판단**하고 `schema.md`의 컬럼 순서와
+대조하라. 붙여넣기용 TSV는 순서만 맞추면 되므로 헤더 언어와 무관하게 그대로 쓸 수 있다.
+
 ## 읽기 폴백 사다리
 
 1. `config.json`의 `sheet_id`로 Google Drive MCP `read_file_content` — 시트가 마크다운 표로 온다.
