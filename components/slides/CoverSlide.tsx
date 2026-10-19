@@ -34,6 +34,7 @@ export function CoverSlide({
         overflow: 'hidden',
         fontFamily: FONT_FAMILY,
         color: COLORS.textPrimary,
+        wordBreak: 'keep-all', // 한국어 어절 단위 줄바꿈 (상속됨)
       }}
     >
       {/* 코너 1/4 원 데코 (밝은 노란색) — 우상단 · 좌하단 */}
